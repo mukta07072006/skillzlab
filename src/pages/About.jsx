@@ -5,29 +5,31 @@ import { motion } from 'framer-motion';
 import { Target, Eye, Heart, Users, Award, Smartphone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import moshud from '@/assets/moshud.jpg';
+import sihan from '@/assets/sihan.jpg';
+import raihan from '@/assets/raihan.jpg';
 
 const About = () => {
   const team = [
     {
       name: 'Moshud Muktadir',
-      role: 'Developer & Creative Designer',
-      bio: 'Expert in mobile design with 5+ years of experience. Passionate about making design accessible to everyone.',
+      role: 'Co-Founder, Developer & Creative Designer',
+      bio: 'Creative design expert with over 5 years of experience and a junior web developer at HUB.io. Passionate about making design accessible and user-friendly for everyone.',
       image: moshud,
-      expertise: ['Web Development', 'Design Expert', 'Brand Strategy']
+      expertise: ['Web Developer', 'Design Expert', 'Brand Strategy']
     },
     {
-      name: 'Raihan Ahmed',
-      role: 'Co-Founder & Tech Lead',
-      bio: 'Full-stack developer specializing in AI-powered development tools and mobile-first solutions.',
-      image: 'Professional male tech lead and developer in modern workspace',
-      expertise: ['Web Development', 'AI Tools', 'Mobile Tech']
+      name: 'Mohammad Raihan',
+      role: 'Co-Founder & Senior Video Editor',
+      bio: 'Expert in Mobile Video Editing with 3 years+ of experience. Driven by passion, fueled by creativity. Crafting precision and purpose to every frame.  ',
+      image: raihan,
+      expertise: ['Expert Video Editor', 'Visualizer', 'Tech Enthusiasts']
     },
     {
-      name: 'Sakib Hassan',
-      role: 'Head of Student Success',
-      bio: 'Dedicated to ensuring every student achieves their learning goals and career objectives.',
-      image: 'Professional student success manager in educational environment',
-      expertise: ['Student Mentoring', 'Career Guidance', 'Learning Strategy']
+      name: 'Moinur Rahman Sihan',
+      role: 'Co-Founder, Creative Designer & Head of HR',
+      bio: 'Expert in designing stunning visuals. And dedicated to ensuring every student achieves their learning goals and career objectives.',
+      image: sihan,
+      expertise: ['Senior Designer', 'Creative Visualizer', 'Learning Strategy']
     }
   ];
 
@@ -109,12 +111,12 @@ const About = () => {
                     expensive equipment and complex setups that many cannot afford.
                   </p>
                   <p>
-                    In 2023, our founders Neha and Raihan decided to change this. They envisioned a platform 
+                    In 2024, our founders Sihan, Moshud and Raihan decided to change this. They envisioned a platform 
                     where anyone with a smartphone could learn professional skills, from creative design to 
                     web development, without needing a computer or expensive software.
                   </p>
                   <p>
-                    Today, SkillzLab has trained over 2,500 students across Bangladesh and beyond, with a 
+                    Today, SkillzLab has trained over 250+ students across Bangladesh and beyond, with a 
                     95% success rate. Our graduates are working as freelancers, starting their own businesses, 
                     and building careers in the digital economy.
                   </p>
@@ -342,15 +344,15 @@ const About = () => {
               >
                 <img  
                   className="w-24 h-24 rounded-full object-cover mx-auto mb-6"
-                  alt="Neha Rahman - Founder of SkillzLab"
-                 src="https://images.unsplash.com/photo-1686488594144-65fb516275e1" />
+                  alt="Moshud Muktadir - Co-Founder of SkillzLab"
+                 src= {moshud} />
                 <blockquote className="text-2xl md:text-3xl text-gray-300 italic mb-6">
                   "Education should never be limited by the device you own or where you live. 
                   At SkillzLab, we're proving that a smartphone is all you need to build a 
                   successful digital career."
                 </blockquote>
                 <p className="text-xl font-semibold gradient-text">
-                  - Neha Rahman, Founder & Creative Director
+                  - Moshud Muktadir, Co- Founder, Skillz Lab.
                 </p>
               </motion.div>
             </div>

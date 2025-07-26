@@ -122,9 +122,9 @@ const SuccessStories = () => {
   };
 
   const stats = [
-    { number: '2500+', label: 'Success Stories', icon: <Users className="w-6 h-6" /> },
+    { number: '250+', label: 'Success Stories', icon: <Users className="w-6 h-6" /> },
     { number: '95%', label: 'Job Placement Rate', icon: <TrendingUp className="w-6 h-6" /> },
-    { number: '৳35K', label: 'Average Monthly Earnings', icon: <Award className="w-6 h-6" /> },
+    { number: '৳25K', label: 'Average Monthly Earnings', icon: <Award className="w-6 h-6" /> },
     { number: '3.2x', label: 'Income Increase', icon: <Star className="w-6 h-6" /> }
   ];
 

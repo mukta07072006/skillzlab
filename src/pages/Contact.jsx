@@ -22,26 +22,26 @@ const Contact = () => {
     {
       icon: <Mail className="w-6 h-6" />,
       title: 'Email Us',
-      details: 'info@skillzlab.com',
+      details: 'skillzlab.io@gmail.com',
       description: 'Send us an email anytime'
     },
     {
       icon: <Phone className="w-6 h-6" />,
       title: 'Call Us',
-      details: '+880 1234-567890',
+      details: '+880 1877538505',
       description: 'Mon-Sun: 9 AM - 9 PM'
     },
     {
       icon: <MessageCircle className="w-6 h-6" />,
       title: 'WhatsApp',
-      details: '+880 1234-567890',
+      details: '+880 1972887181',
       description: 'Quick support via WhatsApp'
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: 'Location',
-      details: 'Dhaka, Bangladesh',
-      description: 'Visit our office'
+      details: 'Chattagram, Bangladesh',
+      description: ''
     }
   ];
 
@@ -254,7 +254,7 @@ const Contact = () => {
                     <div className="mt-4 space-y-2 text-gray-300">
                       <p className="flex items-center space-x-2">
                         <MapPin className="w-4 h-4 text-blue-400" />
-                        <span>Dhaka, Bangladesh</span>
+                        <span>Chattagram, Bangladesh</span>
                       </p>
                       <p className="flex items-center space-x-2">
                         <Clock className="w-4 h-4 text-green-400" />

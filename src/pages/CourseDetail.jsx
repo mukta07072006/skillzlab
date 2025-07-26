@@ -217,62 +217,86 @@ const CourseDetail = () => {
         {
           module: 'Basics of Editing',
           lessons: [
-            'All design fundamentals',
-            'Advanced Canva techniques',
-            'Brand identity creation',
-            'Portfolio development'
+            'Interface walkthrough',
+            'Basic cuts, trims, split, timeline',
+            'First edit: A 15 sec daily vlog'
+
           ]
         },
         {
-          module: 'Complete Web Development Course',
+          module: 'The Art of Storytelling',
           lessons: [
-            'Full-stack development basics',
-            'AI-powered coding',
-            'Multiple project builds',
-            'Deployment mastery'
+            'The Art of Storytelling',
+            'What makes a video hooky?',
+            'Scene planning, clip order',
+            'Assignment: Script & shoot a basic story'
+
+
           ]
         },
         {
-          module: 'Bonus: Digital Marketing',
+          module: 'Music & Beat Syncing',
           lessons: [
-            'Social media marketing',
-            'Content creation strategies',
-            'SEO basics',
-            'Analytics and tracking'
+            'Adding royalty-free music',
+            'Syncing clips to beats',
+            'Beat-cutting tricks for reels/shorts'
           ]
         },
         {
-          module: 'Bonus: Business Skills',
+          module: 'Text, Subtitles & Auto-Captions',
           lessons: [
-            'Freelancing mastery',
-            'Client management',
-            'Pricing strategies',
-            'Business development'
+            'Creating engaging subtitles for reels',
+            'Highlighting keywords with pop effects',
+            'Auto-caption tools + manual override'
           ]
         },
         {
-          module: 'Bonus: Advanced Tools',
+          module: 'Transitions & Smoothness',
           lessons: [
-            'Productivity apps',
-            'Automation tools',
-            'Advanced AI applications',
-            'Industry trends'
+            'Professional vs amateur transitions',
+            'Speed ramping + motion blu',
+            'Assignment: Create a 30-sec montage with smooth transitions'
           ]
         },
         {
-          module: 'Personal Mentoring',
+          module: 'Filters, LUTs & Color Vibes',
           lessons: [
-            'One-on-one sessions',
-            'Career guidance',
-            'Project reviews',
-            'Goal setting'
+            'How to set mood using color',
+            'LUTs, custom color grading',
+            '“Viral Look” filter secrets'
+          ]
+        },
+         {
+          module: 'Green Screen, Overlays & AI Tools',
+          lessons: [
+            'Removing background',
+'Layering videos and photos',
+'Using CapCut’s AI tools smartly'
+
+          ]
+        },
+         {
+          module: 'Voiceover, SFX, and Audio Clean-up',
+          lessons: [
+           'Record clean voiceovers using mobile',
+'Use CapCut’s audio tools (fade, volume, etc.)',
+'Add background sounds (wind, typing, rain)'
+
+          ]
+        },
+        {
+          module: 'Motion Graphics',
+          lessons: [
+            'Introduction to Motion Graphics',
+            'Learn basics of Motion Graphics',
+            'Visualize your thought into Motion Graphics'
           ]
         }
       ],
       features: [
-        'All courses included (₹7,998 value)',
-        'Personal mentoring sessions',
-        'Exclusive bonus content',
+         'Where to get freelance clients (Fiverr, Insta, offline)',
+'How to charge',
+'How to use video editing to grow a personal brand',
         'Priority community access',
         'Advanced certificates',
         'Lifetime updates and support'
