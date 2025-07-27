@@ -323,14 +323,14 @@ const CourseDetail = () => {
   const handleEnroll = () => {
     toast({
       title: "🚧 Enrollment Feature",
-      description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      description: "Coming Soon",
     });
   };
 
   const handleVideoPreview = () => {
     toast({
       title: "🚧 Video Preview",
-      description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      description: "Coming Soon",
     });
   };
 
