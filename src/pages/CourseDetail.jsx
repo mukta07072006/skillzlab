@@ -322,14 +322,14 @@ const CourseDetail = () => {
 
   const handleEnroll = () => {
     toast({
-      title: "🚧 Enrollment Feature",
+      title: "🚧 Site is under development",
       description: "Coming Soon",
     });
   };
 
   const handleVideoPreview = () => {
     toast({
-      title: "🚧 Video Preview",
+      title: "🚧 Site is under development",
       description: "Coming Soon",
     });
   };
