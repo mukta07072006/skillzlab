@@ -1,13 +1,18 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, BookOpen, CreditCard, CheckCircle } from 'lucide-react';
+import { User, Mail, Phone, BookOpen, CreditCard, CheckCircle, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
+
+// Import payment method icons
+import BkashIcon from '@/assets/bkash.png';
+import NagadIcon from '@/assets/nagad.png';
+import RocketIcon from '@/assets/rocket.png';
+import BankIcon from '@/assets/bank.png';
 
 const JoinNow = () => {
   const [formData, setFormData] = useState({
@@ -25,10 +30,10 @@ const JoinNow = () => {
   ];
 
   const paymentMethods = [
-    { id: 'bkash', name: 'bKash', icon: 'bKash mobile payment logo' },
-    { id: 'nagad', name: 'Nagad', icon: 'Nagad mobile payment logo' },
-    { id: 'rocket', name: 'Rocket', icon: 'Rocket mobile payment logo' },
-    { id: 'bank', name: 'Bank Transfer', icon: 'Bank transfer icon' }
+    { id: 'bkash', name: 'bKash', icon: BkashIcon },
+    { id: 'nagad', name: 'Nagad', icon: NagadIcon },
+    { id: 'rocket', name: 'Rocket', icon: RocketIcon },
+    { id: 'bank', name: 'Bank Transfer', icon: BankIcon }
   ];
 
   const benefits = [
@@ -75,14 +80,6 @@ const JoinNow = () => {
       description: "Thanks for your Interest",
     });
 
-    // Simulate WhatsApp redirect
-    setTimeout(() => {
-      toast({
-        title: "🚧 WhatsApp Integration",
-        description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-      });
-    }, 2000);
-
     // Reset form
     setFormData({
       name: '',
@@ -102,15 +99,15 @@ const JoinNow = () => {
         <meta name="description" content="Enroll in SkillzLab courses and start learning professional skills on your mobile. Choose from Creative Design, Web Development, or Complete Skill Pack." />
       </Helmet>
 
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 bg-white">
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4 text-center">
             <motion.h1
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-4xl md:text-6xl font-bold mb-6 text-gray-900"
             >
               <span className="gradient-text">Join SkillzLab</span> Today
             </motion.h1>
@@ -118,7 +115,7 @@ const JoinNow = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               Start your mobile-first learning journey today. Choose your course, complete enrollment, 
               and begin transforming your career with just your smartphone.
@@ -136,19 +133,19 @@ const JoinNow = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <Card className="glass-effect border-gray-700">
+                <Card className="bg-white border border-gray-200 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-2xl gradient-text">Enrollment Form</CardTitle>
-                    <p className="text-gray-300">Fill in your details to get started</p>
+                    <CardTitle className="text-2xl text-gray-900">Enrollment Form</CardTitle>
+                    <p className="text-gray-600">Fill in your details to get started</p>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
                       {/* Personal Information */}
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="name" className="text-gray-300">Full Name *</Label>
+                          <Label htmlFor="name" className="text-gray-700">Full Name *</Label>
                           <div className="relative">
-                            <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                            <User className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                             <Input
                               id="name"
                               name="name"
@@ -156,16 +153,16 @@ const JoinNow = () => {
                               placeholder="Enter your full name"
                               value={formData.name}
                               onChange={handleInputChange}
-                              className="pl-10 bg-gray-800/50 border-gray-600 text-white"
+                              className="pl-10 bg-white border-gray-300"
                               required
                             />
                           </div>
                         </div>
 
                         <div>
-                          <Label htmlFor="email" className="text-gray-300">Email Address *</Label>
+                          <Label htmlFor="email" className="text-gray-700">Email Address *</Label>
                           <div className="relative">
-                            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                             <Input
                               id="email"
                               name="email"
@@ -173,16 +170,16 @@ const JoinNow = () => {
                               placeholder="Enter your email"
                               value={formData.email}
                               onChange={handleInputChange}
-                              className="pl-10 bg-gray-800/50 border-gray-600 text-white"
+                              className="pl-10 bg-white border-gray-300"
                               required
                             />
                           </div>
                         </div>
 
                         <div>
-                          <Label htmlFor="whatsapp" className="text-gray-300">WhatsApp Number *</Label>
+                          <Label htmlFor="whatsapp" className="text-gray-700">WhatsApp Number *</Label>
                           <div className="relative">
-                            <Phone className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                            <Phone className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                             <Input
                               id="whatsapp"
                               name="whatsapp"
@@ -190,7 +187,7 @@ const JoinNow = () => {
                               placeholder="+880 1234-567890"
                               value={formData.whatsapp}
                               onChange={handleInputChange}
-                              className="pl-10 bg-gray-800/50 border-gray-600 text-white"
+                              className="pl-10 bg-white border-gray-300"
                               required
                             />
                           </div>
@@ -199,7 +196,7 @@ const JoinNow = () => {
 
                       {/* Course Selection */}
                       <div>
-                        <Label className="text-gray-300 mb-3 block">Select Course *</Label>
+                        <Label className="text-gray-700 mb-3 block">Select Course *</Label>
                         <div className="space-y-3">
                           {courses.map((course) => (
                             <div key={course.id} className="relative">
@@ -216,15 +213,15 @@ const JoinNow = () => {
                                 htmlFor={course.id}
                                 className={`block p-4 rounded-lg border cursor-pointer transition-all ${
                                   formData.course === course.id
-                                    ? 'border-blue-400 bg-blue-500/10'
-                                    : 'border-gray-600 bg-gray-800/30 hover:border-gray-500'
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-gray-300 bg-white hover:border-gray-400'
                                 }`}
                               >
                                 <div className="flex items-center justify-between">
                                   <div>
-                                    <h3 className="font-semibold text-white">{course.name}</h3>
+                                    <h3 className="font-semibold text-gray-900">{course.name}</h3>
                                   </div>
-                                  <div className="text-xl font-bold gradient-text">
+                                  <div className="text-xl font-bold text-blue-600">
                                     {course.price}
                                   </div>
                                 </div>
@@ -237,7 +234,7 @@ const JoinNow = () => {
                       {/* Payment Method */}
                       {formData.course && selectedCourse?.price !== 'Free' && (
                         <div>
-                          <Label className="text-gray-300 mb-3 block">Payment Method *</Label>
+                          <Label className="text-gray-700 mb-3 block">Payment Method *</Label>
                           <div className="grid grid-cols-2 gap-3">
                             {paymentMethods.map((method) => (
                               <div key={method.id} className="relative">
@@ -254,15 +251,16 @@ const JoinNow = () => {
                                   htmlFor={method.id}
                                   className={`block p-3 rounded-lg border cursor-pointer transition-all text-center ${
                                     formData.paymentMethod === method.id
-                                      ? 'border-blue-400 bg-blue-500/10'
-                                      : 'border-gray-600 bg-gray-800/30 hover:border-gray-500'
+                                      ? 'border-blue-500 bg-blue-50'
+                                      : 'border-gray-300 bg-white hover:border-gray-400'
                                   }`}
                                 >
-                                  <img  
-                                    className="w-8 h-8 mx-auto mb-2"
+                                  <img 
+                                    src={method.icon} 
                                     alt={`${method.name} payment method`}
-                                   src="https://images.unsplash.com/photo-1563013544-824ae1b704d3" />
-                                  <span className="text-sm text-white">{method.name}</span>
+                                    className="w-10 h-10 mx-auto mb-2 object-contain"
+                                  />
+                                  <span className="text-sm text-gray-800">{method.name}</span>
                                 </label>
                               </div>
                             ))}
@@ -274,7 +272,7 @@ const JoinNow = () => {
                       <Button
                         type="submit"
                         size="lg"
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow"
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white"
                       >
                         {selectedCourse?.price === 'Free' ? 'Enroll for Free' : `Enroll Now - ${selectedCourse?.price || ''}`}
                       </Button>
@@ -291,65 +289,108 @@ const JoinNow = () => {
                 className="space-y-8"
               >
                 {/* What You Get */}
-                <Card className="glass-effect border-gray-700">
+                <Card className="bg-white border border-gray-200 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-xl">What You Get</CardTitle>
+                    <CardTitle className="text-xl text-gray-900">What You Get</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {benefits.map((benefit, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300">{benefit}</span>
+                          <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{benefit}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
 
-                {/* Course Preview */}
+                {/* Selected Course */}
                 {selectedCourse && (
-                  <Card className="glass-effect border-gray-700">
+                  <Card className="bg-white border border-gray-200 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-xl">Selected Course</CardTitle>
+                      <CardTitle className="text-xl text-gray-900">Selected Course</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-white">{selectedCourse.name}</h3>
-                        <div className="text-3xl font-bold gradient-text">{selectedCourse.price}</div>
+                        <h3 className="text-lg font-semibold text-gray-900">{selectedCourse.name}</h3>
+                        <div className="text-3xl font-bold text-blue-600">{selectedCourse.price}</div>
                         {selectedCourse.price !== 'Free' && (
-                          <p className="text-gray-400 text-sm">One-time payment • Lifetime access</p>
+                          <p className="text-gray-500 text-sm">One-time payment • Lifetime access</p>
                         )}
                       </div>
                     </CardContent>
                   </Card>
                 )}
 
-                {/* Payment Info */}
-                <Card className="glass-effect border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Payment Information</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 text-sm text-gray-300">
-                      <p>• Secure payment processing</p>
-                      <p>• Lifetime Support</p>
-                      <p>• Instant course access after payment</p>
-                      <p>• WhatsApp confirmation within 5 minutes</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Payment Instructions */}
+                {formData.paymentMethod && (
+                  <Card className="bg-white border border-gray-200 shadow-sm">
+                    <CardHeader>
+                      <CardTitle className="text-xl text-gray-900">Payment Instructions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3 text-sm text-gray-700">
+                        {formData.paymentMethod === 'bkash' && (
+                          <>
+                            <p>1. Go to bKash Mobile Menu</p>
+                            <p>2. Select "Send Money"</p>
+                            <p>3. Enter Number: <span className="font-bold">01877538505</span></p>
+                            <p>4. Enter Amount: <span className="font-bold">{selectedCourse?.price}</span></p>
+                            <p>5. Enter Reference: <span className="font-bold">SKILLZLAB</span></p>
+                          </>
+                        )}
+                        {formData.paymentMethod === 'nagad' && (
+                          <>
+                            <p>1. Go to Nagad Mobile Menu</p>
+                            <p>2. Select "Send Money"</p>
+                            <p>3. Enter Number: <span className="font-bold">01877538505</span></p>
+                            <p>4. Enter Amount: <span className="font-bold">{selectedCourse?.price}</span></p>
+                            <p>5. Enter Reference: <span className="font-bold">SKILLZLAB</span></p>
+                          </>
+                        )}
+                        {formData.paymentMethod === 'rocket' && (
+                          <>
+                            <p>1. Go to Rocket Mobile Menu</p>
+                            <p>2. Select "Send Money"</p>
+                            <p>3. Enter Number: <span className="font-bold">01877538505</span></p>
+                            <p>4. Enter Amount: <span className="font-bold">{selectedCourse?.price}</span></p>
+                            <p>5. Enter Reference: <span className="font-bold">SKILLZLAB</span></p>
+                          </>
+                        )}
+                        {formData.paymentMethod === 'bank' && (
+                          <>
+                            <p>1. Bank Name: <span className="font-bold">Your Bank Name</span></p>
+                            <p>2. Account Name: <span className="font-bold">SkillzLab</span></p>
+                            <p>3. Account Number: <span className="font-bold">1234567890</span></p>
+                            <p>4. Amount: <span className="font-bold">{selectedCourse?.price}</span></p>
+                            <p>5. Reference: <span className="font-bold">SKILLZLAB</span></p>
+                          </>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                 {/* Contact Support */}
-                <Card className="glass-effect border-gray-700">
+                <Card className="bg-white border border-gray-200 shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-xl">Need Help?</CardTitle>
+                    <CardTitle className="text-xl text-gray-900">Need Help?</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3 text-sm text-gray-300">
-                      <p>📧 Email: skillzlab.io@gmail.com</p>
-                      <p>📱 WhatsApp: +880 1234-567890</p>
-                      <p>🕒 Support Hours: 9 AM - 9 PM (Daily)</p>
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <p className="flex items-center">
+                        <Mail className="w-4 h-4 mr-2 text-blue-600" />
+                        <span>Email: skillzlab.io@gmail.com</span>
+                      </p>
+                      <p className="flex items-center">
+                        <Phone className="w-4 h-4 mr-2 text-blue-600" />
+                        <span>WhatsApp: +880 1877538505</span>
+                      </p>
+                      <p className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                        <span>Support Hours: 9 AM - 9 PM (Daily)</span>
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -359,7 +400,7 @@ const JoinNow = () => {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-16 bg-black/20">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -367,7 +408,7 @@ const JoinNow = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-12"
             >
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">
                 Frequently Asked <span className="gradient-text">Questions</span>
               </h2>
             </motion.div>
@@ -405,10 +446,10 @@ const JoinNow = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 >
-                  <Card className="glass-effect border-gray-700 h-full">
+                  <Card className="bg-white border border-gray-200 shadow-sm h-full">
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
-                      <p className="text-gray-300">{faq.answer}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                      <p className="text-gray-600">{faq.answer}</p>
                     </CardContent>
                   </Card>
                 </motion.div>

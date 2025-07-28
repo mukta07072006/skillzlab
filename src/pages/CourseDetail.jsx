@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, Link } from 'react-router-dom';
@@ -65,9 +64,9 @@ const CourseDetail = () => {
             'Brand consistency'
           ]
         },
-    {
-          module: 'Mastering Pixellab, Picsart & PSCC ',
-           lessons: []
+        {
+          module: 'Mastering Pixellab, Picsart & PSCC',
+          lessons: []
         },
         {
           module: 'Module 4: Logo and Branding',
@@ -220,7 +219,6 @@ const CourseDetail = () => {
             'Interface walkthrough',
             'Basic cuts, trims, split, timeline',
             'First edit: A 15 sec daily vlog'
-
           ]
         },
         {
@@ -230,8 +228,6 @@ const CourseDetail = () => {
             'What makes a video hooky?',
             'Scene planning, clip order',
             'Assignment: Script & shoot a basic story'
-
-
           ]
         },
         {
@@ -263,25 +259,23 @@ const CourseDetail = () => {
           lessons: [
             'How to set mood using color',
             'LUTs, custom color grading',
-            '“Viral Look” filter secrets'
+            '"Viral Look" filter secrets'
           ]
         },
-         {
+        {
           module: 'Green Screen, Overlays & AI Tools',
           lessons: [
             'Removing background',
-'Layering videos and photos',
-'Using CapCut’s AI tools smartly'
-
+            'Layering videos and photos',
+            'Using CapCut AI tools smartly'
           ]
         },
-         {
+        {
           module: 'Voiceover, SFX, and Audio Clean-up',
           lessons: [
-           'Record clean voiceovers using mobile',
-'Use CapCut’s audio tools (fade, volume, etc.)',
-'Add background sounds (wind, typing, rain)'
-
+            'Record clean voiceovers using mobile',
+           'Use CapCut\'s audio tools (fade, volume, etc.)',
+            'Add background sounds (wind, typing, rain)'
           ]
         },
         {
@@ -294,9 +288,9 @@ const CourseDetail = () => {
         }
       ],
       features: [
-         'Where to get freelance clients (Fiverr, Insta, offline)',
-'How to charge',
-'How to use video editing to grow a personal brand',
+        'Where to get freelance clients (Fiverr, Insta, offline)',
+        'How to charge',
+        'How to use video editing to grow a personal brand',
         'Priority community access',
         'Advanced certificates',
         'Lifetime updates and support'
@@ -308,12 +302,12 @@ const CourseDetail = () => {
 
   if (!course) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
+      <div className="min-h-screen pt-24 flex items-center justify-center bg-white">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Course Not Found</h1>
-          <p className="text-gray-400 mb-8">The course you're looking for doesn't exist.</p>
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">Course Not Found</h1>
+          <p className="text-gray-600 mb-8">The course you're looking for doesn't exist.</p>
           <Link to="/courses">
-            <Button>Back to Courses</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">Back to Courses</Button>
           </Link>
         </div>
       </div>
@@ -341,9 +335,9 @@ const CourseDetail = () => {
         <meta name="description" content={`${course.description} Learn ${course.title.toLowerCase()} using just your smartphone. ${course.duration} course with ${course.students} students.`} />
       </Helmet>
 
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 bg-white">
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <motion.div
@@ -351,28 +345,28 @@ const CourseDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
                   {course.title}
                 </h1>
-                <p className="text-xl text-gray-300 mb-6">{course.subtitle}</p>
-                <p className="text-gray-400 mb-8">{course.description}</p>
+                <p className="text-xl text-gray-600 mb-6">{course.subtitle}</p>
+                <p className="text-gray-700 mb-8">{course.description}</p>
 
                 {/* Course Stats */}
                 <div className="flex flex-wrap gap-6 mb-8">
-                  <div className="flex items-center space-x-2 text-gray-300">
-                    <Clock className="w-5 h-5 text-blue-400" />
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <Clock className="w-5 h-5 text-blue-600" />
                     <span>{course.duration}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-300">
-                    <Users className="w-5 h-5 text-green-400" />
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <Users className="w-5 h-5 text-green-600" />
                     <span>{course.students.toLocaleString()} students</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-300">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <Star className="w-5 h-5 text-yellow-500 fill-current" />
                     <span>{course.rating} rating</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-300">
-                    <Smartphone className="w-5 h-5 text-purple-400" />
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <Smartphone className="w-5 h-5 text-purple-600" />
                     <span>{course.level}</span>
                   </div>
                 </div>
@@ -380,15 +374,15 @@ const CourseDetail = () => {
                 {/* Price and CTA */}
                 <div className="flex items-center space-x-6">
                   <div>
-                    <span className="text-4xl font-bold gradient-text">{course.price}</span>
+                    <span className="text-4xl font-bold text-blue-600">{course.price}</span>
                     {course.price !== '399' && (
-                      <span className="text-gray-400 ml-2">one-time payment</span>
+                      <span className="text-gray-600 ml-2">one-time payment</span>
                     )}
                   </div>
                   <Button 
                     size="lg" 
                     onClick={handleEnroll}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow px-8"
+                    className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8"
                   >
                     Enroll Now
                   </Button>
@@ -401,18 +395,16 @@ const CourseDetail = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative"
               >
-                <Card className="glass-effect border-gray-700 overflow-hidden">
+                <Card className="bg-white border border-gray-200 shadow-sm overflow-hidden">
                   <div>
                     <img  
-  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-  alt={`${course.title} course thumbnail`}
-  src={course.thumbnail} // ✅ dynamic image from object
-/>
-
-      
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      alt={`${course.title} course thumbnail`}
+                      src={course.thumbnail}
+                    />
                   </div>
                   <CardContent className="p-6">
-                    <p className="text-center text-gray-300">
+                    <p className="text-center text-gray-600">
                       <strong>Instructor:</strong> {course.instructor}
                     </p>
                   </CardContent>
@@ -434,12 +426,12 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">What You'll Learn</h2>
+                  <h2 className="text-3xl font-bold mb-6 text-gray-900">What You'll Learn</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {course.features.map((feature, index) => (
                       <div key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
-                        <span className="text-gray-300">{feature}</span>
+                        <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -451,18 +443,18 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">Course Curriculum</h2>
+                  <h2 className="text-3xl font-bold mb-6 text-gray-900">Course Curriculum</h2>
                   <div className="space-y-4">
                     {course.curriculum.map((module, index) => (
-                      <Card key={index} className="glass-effect border-gray-700">
+                      <Card key={index} className="bg-white border border-gray-200 shadow-sm">
                         <CardHeader>
-                          <CardTitle className="text-xl text-blue-400">{module.module}</CardTitle>
+                          <CardTitle className="text-xl text-blue-600">{module.module}</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <ul className="space-y-2">
                             {module.lessons.map((lesson, lessonIndex) => (
-                              <li key={lessonIndex} className="flex items-center space-x-3 text-gray-300">
-                                <Play className="w-4 h-4 text-purple-400" />
+                              <li key={lessonIndex} className="flex items-center space-x-3 text-gray-700">
+                                <Play className="w-4 h-4 text-blue-500" />
                                 <span>{lesson}</span>
                               </li>
                             ))}
@@ -479,12 +471,12 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">Who This Course Is For</h2>
+                  <h2 className="text-3xl font-bold mb-6 text-gray-900">Who This Course Is For</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {course.targetAudience.map((audience, index) => (
                       <div key={index} className="flex items-start space-x-3">
-                        <Users className="w-5 h-5 text-blue-400 mt-1 flex-shrink-0" />
-                        <span className="text-gray-300">{audience}</span>
+                        <Users className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{audience}</span>
                       </div>
                     ))}
                   </div>
@@ -499,16 +491,16 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <Card className="glass-effect border-gray-700">
+                  <Card className="bg-white border border-gray-200 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-xl">Requirements</CardTitle>
+                      <CardTitle className="text-xl text-gray-900">Requirements</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
                         {course.requirements.map((requirement, index) => (
-                          <li key={index} className="flex items-start space-x-3 text-gray-300">
-                            <CheckCircle className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
-                            <span className="text-sm">{requirement}</span>
+                          <li key={index} className="flex items-start space-x-3 text-gray-700">
+                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span>{requirement}</span>
                           </li>
                         ))}
                       </ul>
@@ -522,27 +514,27 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <Card className="glass-effect border-gray-700">
+                  <Card className="bg-white border border-gray-200 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-xl">Course Includes</CardTitle>
+                      <CardTitle className="text-xl text-gray-900">Course Includes</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
-                        <div className="flex items-center space-x-3 text-gray-300">
-                          <Clock className="w-4 h-4 text-blue-400" />
-                          <span className="text-sm">{course.duration} of content</span>
+                        <div className="flex items-center space-x-3 text-gray-700">
+                          <Clock className="w-4 h-4 text-blue-500" />
+                          <span>{course.duration} of content</span>
                         </div>
-                        <div className="flex items-center space-x-3 text-gray-300">
-                          <Smartphone className="w-4 h-4 text-purple-400" />
-                          <span className="text-sm">Mobile-optimized learning</span>
+                        <div className="flex items-center space-x-3 text-gray-700">
+                          <Smartphone className="w-4 h-4 text-purple-500" />
+                          <span>Mobile-optimized learning</span>
                         </div>
-                        <div className="flex items-center space-x-3 text-gray-300">
-                          <Award className="w-4 h-4 text-yellow-400" />
-                          <span className="text-sm">Certificate of completion</span>
+                        <div className="flex items-center space-x-3 text-gray-700">
+                          <Award className="w-4 h-4 text-yellow-500" />
+                          <span>Certificate of completion</span>
                         </div>
-                        <div className="flex items-center space-x-3 text-gray-300">
-                          <Download className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">Downloadable resources</span>
+                        <div className="flex items-center space-x-3 text-gray-700">
+                          <Download className="w-4 h-4 text-green-500" />
+                          <span>Downloadable resources</span>
                         </div>
                       </div>
                     </CardContent>
@@ -555,20 +547,19 @@ const CourseDetail = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <Card className="glass-effect border-gray-700 text-center">
+                  <Card className="bg-white border border-gray-200 shadow-sm text-center">
                     <CardContent className="p-6">
-                      <div className="text-3xl font-bold gradient-text mb-2">{course.price}</div>
-                      {course.price !== 'Free' && (
-                        <p className="text-gray-400 text-sm mb-4">One-time payment</p>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">{course.price}</div>
+                      {course.price !== '399' && (
+                        <p className="text-gray-600 text-sm mb-4">One-time payment</p>
                       )}
                       <Button 
                         size="lg" 
                         onClick={handleEnroll}
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow mb-4"
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white"
                       >
                         Enroll Now
                       </Button>
-                      <p className="text-xs text-gray-400"></p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -578,7 +569,7 @@ const CourseDetail = () => {
         </section>
 
         {/* Related Courses */}
-        <section className="py-16 bg-black/20">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -586,17 +577,17 @@ const CourseDetail = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-12"
             >
-              <h2 className="text-4xl font-bold mb-4">
-                Explore More <span className="gradient-text">Courses</span>
+              <h2 className="text-4xl font-bold mb-4 text-gray-900">
+                Explore More <span className="text-blue-600">Courses</span>
               </h2>
-              <p className="text-xl text-gray-300">
+              <p className="text-xl text-gray-600">
                 Continue your learning journey with our other courses
               </p>
             </motion.div>
 
             <div className="text-center">
               <Link to="/courses">
-                <Button size="lg" variant="outline" className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white">
+                <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
                   View All Courses
                 </Button>
               </Link>

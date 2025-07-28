@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -19,15 +18,15 @@ const About = () => {
     },
     {
       name: 'Mohammad Raihan',
-      role: 'Co-Founder & Senior Video Editor',
-      bio: 'Expert in Mobile Video Editing with 3 years+ of experience. Driven by passion, fueled by creativity. Crafting precision and purpose to every frame.  ',
+      role: 'Co-Founder, Senior Video Editor',
+      bio: 'Expert in Mobile Video Editing with 3 years+ of experience. Driven by passion, fueled by creativity. Crafting precision and purpose to every frame.',
       image: raihan,
-      expertise: ['Expert Video Editor', 'Visualizer', 'Tech Enthusiasts']
+      expertise: ['Expert Video Editor', 'Visualizer', 'Tech Enthusiast']
     },
     {
       name: 'Moinur Rahman Sihan',
-      role: 'Co-Founder, Creative Designer & Head of HR',
-      bio: 'Expert in designing stunning visuals. And dedicated to ensuring every student achieves their learning goals and career objectives.',
+      role: 'Co-Founder , Creative Designer & Head of HR',
+      bio: 'Expert in designing stunning visuals. Dedicated to ensuring every student achieves their learning goals and career objectives.',
       image: sihan,
       expertise: ['Senior Designer', 'Creative Visualizer', 'Learning Strategy']
     }
@@ -35,22 +34,22 @@ const About = () => {
 
   const values = [
     {
-      icon: <Smartphone className="w-8 h-8" />,
+      icon: <Smartphone className="w-8 h-8 text-white" />,
       title: 'Mobile-First Learning',
       description: 'We believe learning should be accessible anywhere, anytime, using just your smartphone.'
     },
     {
-      icon: <Users className="w-8 h-8" />,
+      icon: <Users className="w-8 h-8 text-white" />,
       title: 'Community Driven',
       description: 'Our supportive community helps every student succeed through peer learning and mentorship.'
     },
     {
-      icon: <Award className="w-8 h-8" />,
+      icon: <Award className="w-8 h-8 text-white" />,
       title: 'Quality Education',
       description: 'We provide industry-relevant skills that directly translate to career opportunities.'
     },
     {
-      icon: <Heart className="w-8 h-8" />,
+      icon: <Heart className="w-8 h-8 text-white" />,
       title: 'Student Success',
       description: 'Your success is our success. We are committed to helping you achieve your goals.'
     }
@@ -70,15 +69,15 @@ const About = () => {
         <meta name="description" content="Learn about SkillzLab's mission to make quality education accessible through mobile-first learning. Meet our team and discover our story of empowering students worldwide." />
       </Helmet>
 
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 bg-white">
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4 text-center">
             <motion.h1
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-4xl md:text-6xl font-bold mb-6 text-gray-900"
             >
               About <span className="gradient-text">SkillzLab</span>
             </motion.h1>
@@ -86,7 +85,7 @@ const About = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               Empowering the next generation of digital creators through mobile-first education. 
               We believe that quality learning should be accessible to everyone, everywhere.
@@ -103,8 +102,8 @@ const About = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <h2 className="text-4xl font-bold mb-6">Our Story</h2>
-                <div className="space-y-4 text-gray-300">
+                <h2 className="text-4xl font-bold mb-6 text-gray-900">Our Story</h2>
+                <div className="space-y-4 text-gray-600">
                   <p>
                     SkillzLab was born from a simple observation: millions of people worldwide have smartphones 
                     but lack access to quality digital education. Traditional learning methods often require 
@@ -129,15 +128,28 @@ const About = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative"
               >
-          
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
+                <div className="bg-gradient-to-r from-blue-100 to-blue-50 rounded-2xl p-8 h-full">
+                  <div className="grid grid-cols-2 gap-4">
+                    {team.map((member, index) => (
+                      <div key={index} className="flex flex-col items-center text-center">
+                        <img 
+                          src={member.image} 
+                          alt={member.name}
+                          className="w-24 h-24 rounded-full object-cover mb-3 border-4 border-white shadow-md"
+                        />
+                        <h3 className="font-bold text-gray-900">{member.name}</h3>
+                        <p className="text-sm text-blue-600">{member.role.split(',')[0]}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
         </section>
 
         {/* Mission, Vision, Values */}
-        <section className="py-16 bg-black/20">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <motion.div
@@ -146,13 +158,15 @@ const About = () => {
                 transition={{ duration: 0.8 }}
                 className="text-center"
               >
-                <Card className="glass-effect border-gray-700 h-full">
+                <Card className="bg-white border-gray-200 h-full hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <Target className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                    <CardTitle className="text-2xl">Our Mission</CardTitle>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Target className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900">Our Mission</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-300">
+                    <p className="text-gray-600">
                       To democratize digital education by making professional skills accessible 
                       to everyone through mobile-first learning experiences.
                     </p>
@@ -166,13 +180,15 @@ const About = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-center"
               >
-                <Card className="glass-effect border-gray-700 h-full">
+                <Card className="bg-white border-gray-200 h-full hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <Eye className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                    <CardTitle className="text-2xl">Our Vision</CardTitle>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Eye className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900">Our Vision</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-300">
+                    <p className="text-gray-600">
                       A world where geographical location and economic status don't limit 
                       access to quality education and career opportunities.
                     </p>
@@ -186,13 +202,15 @@ const About = () => {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="text-center"
               >
-                <Card className="glass-effect border-gray-700 h-full">
+                <Card className="bg-white border-gray-200 h-full hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <Heart className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                    <CardTitle className="text-2xl">Our Values</CardTitle>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Heart className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900">Our Values</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-300">
+                    <p className="text-gray-600">
                       Accessibility, innovation, community, and student success drive 
                       everything we do at SkillzLab.
                     </p>
@@ -212,10 +230,10 @@ const About = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">
                 What We <span className="gradient-text">Stand For</span>
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Our core values guide every decision we make and every course we create.
               </p>
             </motion.div>
@@ -228,13 +246,13 @@ const About = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 >
-                  <Card className="glass-effect border-gray-700 text-center h-full hover:neon-glow transition-all duration-300">
+                  <Card className="bg-white border-gray-200 text-center h-full hover:shadow-lg transition-shadow">
                     <CardContent className="p-6">
-                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         {value.icon}
                       </div>
-                      <h3 className="text-xl font-bold mb-3 text-white">{value.title}</h3>
-                      <p className="text-gray-300 text-sm">{value.description}</p>
+                      <h3 className="text-xl font-bold mb-3 text-gray-900">{value.title}</h3>
+                      <p className="text-gray-600 text-sm">{value.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -244,7 +262,7 @@ const About = () => {
         </section>
 
         {/* Team Section */}
-        <section className="py-16 bg-black/20">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -252,11 +270,11 @@ const About = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">
                 Meet Our <span className="gradient-text">Team</span>
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Passionate educators and industry experts dedicated to your success.
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Passionate educators .
               </p>
             </motion.div>
 
@@ -268,22 +286,21 @@ const About = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                 >
-                  <Card className="glass-effect border-gray-700 text-center hover:neon-glow transition-all duration-300">
+                  <Card className="bg-white border-gray-200 text-center hover:shadow-lg transition-shadow">
                     <CardContent className="p-6">
-                      <img  
-  className="w-32 h-32 rounded-full object-cover mx-auto mb-6"
-  alt={`${member.name} - ${member.role}`}
-  src={member.image}
-/>
-
-                      <h3 className="text-2xl font-bold mb-2 text-white">{member.name}</h3>
-                      <p className="text-blue-400 font-semibold mb-4">{member.role}</p>
-                      <p className="text-gray-300 text-sm mb-4">{member.bio}</p>
+                      <img 
+                        src={member.image}
+                        alt={`${member.name} - ${member.role}`}
+                        className="w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 border-white shadow-md"
+                      />
+                      <h3 className="text-2xl font-bold mb-2 text-gray-900">{member.name}</h3>
+                      <p className="text-blue-600 font-semibold mb-4">{member.role}</p>
+                      <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
                       <div className="flex flex-wrap justify-center gap-2">
                         {member.expertise.map((skill, skillIndex) => (
                           <span 
                             key={skillIndex}
-                            className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs"
+                            className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs"
                           >
                             {skill}
                           </span>
@@ -306,10 +323,10 @@ const About = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">
                 Our <span className="gradient-text">Impact</span>
               </h2>
-              <p className="text-xl text-gray-300">
+              <p className="text-xl text-gray-600">
                 Numbers that reflect our commitment to student success
               </p>
             </motion.div>
@@ -323,10 +340,10 @@ const About = () => {
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">
+                  <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">
                     {stat.number}
                   </div>
-                  <p className="text-gray-300">{stat.label}</p>
+                  <p className="text-gray-600">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -334,7 +351,7 @@ const About = () => {
         </section>
 
         {/* Founder Message */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
@@ -342,17 +359,18 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <img  
-                  className="w-24 h-24 rounded-full object-cover mx-auto mb-6"
+                <img 
+                  src={moshud}
                   alt="Moshud Muktadir - Co-Founder of SkillzLab"
-                 src= {moshud} />
-                <blockquote className="text-2xl md:text-3xl text-gray-300 italic mb-6">
+                  className="w-24 h-24 rounded-full object-cover mx-auto mb-6 border-4 border-white shadow-md"
+                />
+                <blockquote className="text-2xl md:text-3xl text-gray-700 italic mb-6">
                   "Education should never be limited by the device you own or where you live. 
                   At SkillzLab, we're proving that a smartphone is all you need to build a 
                   successful digital career."
                 </blockquote>
-                <p className="text-xl font-semibold gradient-text">
-                  - Moshud Muktadir, Co- Founder, Skillz Lab.
+                <p className="text-xl font-semibold text-blue-600">
+                  - Moshud Muktadir, Co-Founder, SkillzLab
                 </p>
               </motion.div>
             </div>

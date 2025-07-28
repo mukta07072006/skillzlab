@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Smartphone, Code, Package } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png'; // Import your logo
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,96 +11,100 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Courses', path: '/courses' },
-    { name: 'About', path: '/about' },
-    { name: 'Success Stories', path: '/success-stories' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Contact', path: '/contact' }
-  ];
+  const navItems = [ 'Home', 'Courses', 'About', 'Success Stories', 'Contact' ].map(name => ({
+    name,
+    path: name === 'Home' ? '/' : `/${name.toLowerCase().replace(/\s+/g, '-')}`
+  }));
 
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass-effect shadow-lg' : 'bg-transparent'
+        isScrolled ? 'bg-white shadow-md' : 'bg-white'
       }`}
     >
-      <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-4">
+        <nav className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">S</span>
-            </div>
-            <span className="text-2xl font-bold gradient-text">SkillzLab</span>
+          <Link to="/" className="flex items-center">
+            <img 
+              src={logo} 
+              alt="SkillzLab Logo" 
+              className="h-10 w-auto" 
+            />
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
+            {navItems.map(item => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`text-sm font-medium transition-colors hover:text-blue-400 ${
-                  location.pathname === item.path ? 'text-blue-400' : 'text-gray-300'
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === item.path
+                    ? 'text-blue-600 font-semibold'
+                    : 'text-gray-700 hover:text-blue-600'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
             <Link to="/join-now">
-              <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow">
+              <Button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-md shadow-sm">
                 Join Now
               </Button>
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white p-2"
+          {/* Mobile toggle */}
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            className="md:hidden text-gray-800 p-2 focus:outline-none"
+            aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-        </div>
+        </nav>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Menu */}
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden mt-4 glass-effect rounded-lg p-4"
+            className="md:hidden bg-white shadow-lg rounded-lg p-4 mb-4"
           >
-            {navItems.map((item) => (
+            {navItems.map(item => (
               <Link
                 key={item.name}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                className={`block py-2 text-sm font-medium transition-colors hover:text-blue-400 ${
-                  location.pathname === item.path ? 'text-blue-400' : 'text-gray-300'
+                className={`block py-3 px-4 text-sm font-medium transition-colors rounded-md ${
+                  location.pathname === item.path
+                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            <Link to="/join-now" onClick={() => setIsOpen(false)}>
-              <Button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+            <Link 
+              to="/join-now" 
+              onClick={() => setIsOpen(false)}
+              className="block mt-2"
+            >
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-md shadow-sm">
                 Join Now
               </Button>
             </Link>
           </motion.div>
         )}
-      </nav>
+      </div>
     </motion.header>
   );
 };

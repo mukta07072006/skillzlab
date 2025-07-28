@@ -1,29 +1,28 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: 220 20% 8%;
-  --foreground: 220 10% 95%;
-  --card: 220 20% 10%;
-  --card-foreground: 220 10% 95%;
-  --popover: 220 20% 10%;
-  --popover-foreground: 220 10% 95%;
-  --primary: 262 83% 58%;
-  --primary-foreground: 220 10% 95%;
-  --secondary: 220 20% 15%;
-  --secondary-foreground: 220 10% 95%;
-  --muted: 220 20% 15%;
-  --muted-foreground: 220 10% 70%;
-  --accent: 220 20% 15%;
-  --accent-foreground: 220 10% 95%;
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 220 10% 95%;
-  --border: 220 20% 20%;
-  --input: 220 20% 20%;
-  --ring: 262 83% 58%;
+  --background: 0 0% 100%;          /* White background */
+  --foreground: 222 84% 5%;         /* Dark blue text */
+  --card: 0 0% 98%;                 /* Slightly off-white cards */
+  --card-foreground: 222 84% 5%;
+  --popover: 0 0% 98%;              /* Matching card color */
+  --popover-foreground: 222 84% 5%;
+  --primary: 210 100% 50%;          /* Bright blue primary */
+  --primary-foreground: 0 0% 100%;   /* White text on primary */
+  --secondary: 210 60% 90%;          /* Light blue secondary */
+  --secondary-foreground: 222 84% 5%;
+  --muted: 210 20% 96%;             /* Very light blue muted */
+  --muted-foreground: 215 16% 47%;
+  --accent: 45 100% 50%;            /* Solid yellow accent */
+  --accent-foreground: 222 84% 5%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214 32% 91%;            /* Light gray border */
+  --input: 214 32% 91%;
+  --ring: 210 100% 50%;             /* Matching primary blue */
   --radius: 0.5rem;
 }
 
@@ -32,27 +31,27 @@
 }
 
 body {
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e  50%, #0f3460 75%, #533483 100%);
+  background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #a855f7 100%);
+  background: linear-gradient(135deg, hsl(210, 100%, 50%) 0%, hsl(210, 80%, 60%) 50%, hsl(210, 60%, 70%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .neon-glow {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.3), 0 0 40px rgba(100, 181, 246, 0.2);
 }
 
 .glass-effect {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .floating-animation {
@@ -69,8 +68,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  from { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
-  to { box-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
+  from { box-shadow: 0 0 10px rgba(33, 150, 243, 0.4); }
+  to { box-shadow: 0 0 20px rgba(100, 181, 246, 0.6); }
 }
 
 .whatsapp-float {
@@ -93,6 +92,20 @@ body {
 
 .hero-pattern {
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(33, 150, 243, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(100, 181, 246, 0.1) 0%, transparent 50%);
+}
+
+/* Additional yellow accent styles */
+.yellow-accent {
+  color: hsl(45, 100%, 50%);
+}
+
+.yellow-bg-accent {
+  background-color: hsl(45, 100%, 50%);
+  color: hsl(222, 84%, 5%);
+}
+
+.yellow-border-accent {
+  border-color: hsl(45, 100%, 50%);
 }

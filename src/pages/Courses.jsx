@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -25,7 +24,7 @@ const Courses = () => {
       price: '৳399',
       thumbnail: poster1,
       description: 'Master Canva, Pixellab, Picsart & PSCC to create stunning graphics, logos, and social media content.',
-      icon: <Smartphone className="w-6 h-6" />,
+      icon: <Smartphone className="w-6 h-6 text-white" />,
       highlights: ['Canva Pro techniques', 'Mobile design workflow', 'Social media graphics', 'Logo design', 'Banner Design', 'Certificate of completion']
     },
     {
@@ -39,7 +38,7 @@ const Courses = () => {
       price: '৳699',
       thumbnail: poster2,
       description: 'Build websites using AI tools and mobile-friendly development environments. No PC required!',
-      icon: <Code className="w-6 h-6" />,
+      icon: <Code className="w-6 h-6 text-white" />,
       highlights: ['AI-powered coding', 'Mobile development', 'Responsive design', 'Deployment strategies', 'Certificate of completion']
     },
     {
@@ -53,7 +52,7 @@ const Courses = () => {
       price: '৳499',
       thumbnail: poster3,
       description: 'Everything you need from basic to advanced skills. Design, development, and business skills in one package.',
-      icon: <Package className="w-6 h-6" />,
+      icon: <Package className="w-6 h-6 text-white" />,
       highlights: ['Motion Graphics', 'Bonus content', 'Personal mentoring', 'Certificate of completion']
     }
   ];
@@ -76,15 +75,15 @@ const Courses = () => {
         <meta name="description" content="Explore our mobile-first courses: Creative Design, Web Development with AI, and Complete Skill Pack. Learn professional skills using just your smartphone." />
       </Helmet>
 
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 bg-background">
         {/* Header */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4 text-center">
             <motion.h1
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-4xl md:text-6xl font-bold mb-6 text-gray-900"
             >
               Our <span className="gradient-text">Courses</span>
             </motion.h1>
@@ -92,7 +91,7 @@ const Courses = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
               Master in-demand skills using just your smartphone. All courses designed for mobile-first learning with practical, hands-on projects.
             </motion.p>
@@ -100,7 +99,7 @@ const Courses = () => {
         </section>
 
         {/* Filters */}
-        <section className="py-8 bg-black/20">
+        <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-center gap-4">
               {filters.map((filter) => (
@@ -109,8 +108,8 @@ const Courses = () => {
                   onClick={() => setSelectedFilter(filter.id)}
                   className={`px-6 py-3 rounded-full transition-all duration-300 ${
                     selectedFilter === filter.id
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white neon-glow'
-                      : 'glass-effect text-gray-300 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   <Filter className="w-4 h-4 inline mr-2" />
@@ -132,42 +131,42 @@ const Courses = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                 >
-                  <Card className="glass-effect border-gray-700 hover:neon-glow transition-all duration-300 h-full overflow-hidden group">
+                  <Card className="bg-white hover:shadow-lg border border-gray-200 transition-all duration-300 h-full overflow-hidden group">
                     {/* Course Thumbnail */}
                     <div className="relative h-48 overflow-hidden">
-                     <img  
-  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-  alt={`${course.title} course thumbnail`}
-  src={course.thumbnail} // ✅ dynamic image from object
-/>
+                      <img  
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        alt={`${course.title} course thumbnail`}
+                        src={course.thumbnail}
+                      />
                       <div className="absolute top-4 left-4">
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-2">
+                        <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-full p-2">
                           {course.icon}
                         </div>
                       </div>
                       <div className="absolute top-4 right-4">
-                        <span className="bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                        <span className="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm">
                           {course.level}
                         </span>
                       </div>
                     </div>
 
                     <CardHeader>
-                      <CardTitle className="text-xl text-white group-hover:text-blue-400 transition-colors">
+                      <CardTitle className="text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
                         {course.title}
                       </CardTitle>
-                      <p className="text-gray-300 text-sm">{course.description}</p>
+                      <p className="text-gray-600 text-sm">{course.description}</p>
                     </CardHeader>
 
                     <CardContent className="space-y-4">
                       {/* Course Stats */}
-                      <div className="flex items-center justify-between text-sm text-gray-400">
+                      <div className="flex items-center justify-between text-sm text-gray-500">
                         <div className="flex items-center space-x-1">
-                          <Clock className="w-4 h-4" />
+                          <Clock className="w-4 h-4 text-blue-600" />
                           <span>{course.duration}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <Users className="w-4 h-4" />
+                          <Users className="w-4 h-4 text-blue-600" />
                           <span>{course.students.toLocaleString()}</span>
                         </div>
                         <div className="flex items-center space-x-1">
@@ -178,11 +177,11 @@ const Courses = () => {
 
                       {/* Highlights */}
                       <div className="space-y-2">
-                        <p className="text-sm font-semibold text-gray-300">What you'll learn:</p>
-                        <ul className="text-sm text-gray-400 space-y-1">
+                        <p className="text-sm font-semibold text-gray-700">What you'll learn:</p>
+                        <ul className="text-sm text-gray-600 space-y-1">
                           {course.highlights.map((highlight, i) => (
                             <li key={i} className="flex items-center space-x-2">
-                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
                               <span>{highlight}</span>
                             </li>
                           ))}
@@ -190,15 +189,15 @@ const Courses = () => {
                       </div>
 
                       {/* Price and CTA */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                         <div>
-                          <span className="text-2xl font-bold gradient-text">{course.price}</span>
+                          <span className="text-2xl font-bold text-blue-600">{course.price}</span>
                           {course.price !== 'Free' && (
-                            <span className="text-sm text-gray-400 ml-2">one-time</span>
+                            <span className="text-sm text-gray-500 ml-2">one-time</span>
                           )}
                         </div>
                         <Link to={`/courses/${course.id}`}>
-                          <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+                          <Button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white">
                             See Details
                           </Button>
                         </Link>
@@ -212,7 +211,7 @@ const Courses = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <section className="py-20 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -220,19 +219,19 @@ const Courses = () => {
               transition={{ duration: 0.8 }}
               className="max-w-3xl mx-auto"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
                 Can't Decide? <span className="gradient-text">Start with Our Courses!</span>
               </h2>
-              <p className="text-xl text-gray-300 mb-8">
+              <p className="text-xl text-gray-600 mb-8">
                 Try our Creative Design courses and experience the SkillzLab difference.
               </p>
               <Link to="/courses/creative-design">
-                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow text-lg px-12 py-4 mr-4">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-lg px-12 py-4 mr-4">
                   Start Courses
                 </Button>
               </Link>
               <Link to="/join-now">
-                <Button size="lg" variant="outline" className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white text-lg px-12 py-4">
+                <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white text-lg px-12 py-4">
                   Enroll Now
                 </Button>
               </Link>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -17,31 +16,37 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Contact information with WhatsApp integration
   const contactInfo = [
     {
-      icon: <Mail className="w-6 h-6" />,
+      icon: <Mail className="w-6 h-6 text-white" />,
       title: 'Email Us',
       details: 'skillzlab.io@gmail.com',
-      description: 'Send us an email anytime'
+      description: 'Send us an email anytime',
+      action: () => window.location.href = 'mailto:skillzlab.io@gmail.com'
     },
     {
-      icon: <Phone className="w-6 h-6" />,
+      icon: <Phone className="w-6 h-6 text-white" />,
       title: 'Call Us',
       details: '+880 1877538505',
-      description: 'Mon-Sun: 9 AM - 9 PM'
+      description: 'Mon-Sun: 9 AM - 9 PM',
+      action: () => window.location.href = 'tel:+8801877538505'
     },
     {
-      icon: <MessageCircle className="w-6 h-6" />,
+      icon: <MessageCircle className="w-6 h-6 text-white" />,
       title: 'WhatsApp',
-      details: '+880 1972887181',
-      description: 'Quick support via WhatsApp'
+      details: '+880 1877538505',
+      description: 'Instant messaging support',
+      action: () => window.open('https://wa.me/8801877538505', '_blank')
     },
     {
-      icon: <MapPin className="w-6 h-6" />,
+      icon: <MapPin className="w-6 h-6 text-white" />,
       title: 'Location',
       details: 'Chattagram, Bangladesh',
-      description: ''
+      description: 'Our headquarters',
+      action: null
     }
   ];
 
@@ -52,8 +57,9 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     if (!formData.name || !formData.email || !formData.message) {
       toast({
@@ -61,50 +67,66 @@ const Contact = () => {
         description: "Please fill in all required fields.",
         variant: "destructive"
       });
+      setIsSubmitting(false);
       return;
     }
 
-    // Save to localStorage
-    const contactData = {
-      ...formData,
-      timestamp: new Date().toISOString(),
-      status: 'new'
-    };
+    try {
+      // Replace with your Formspree endpoint
+      const response = await fetch('https://formspree.io/f/xgvzylzd', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          _replyto: formData.email // Ensure Formspree knows where to reply
+        }),
+      });
 
-    const existingContacts = JSON.parse(localStorage.getItem('skillzlab_contacts') || '[]');
-    existingContacts.push(contactData);
-    localStorage.setItem('skillzlab_contacts', JSON.stringify(existingContacts));
-
-    toast({
-      title: "✅ Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you within 24 hours.",
-    });
-
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+      if (response.ok) {
+        toast({
+          title: "✅ Message Sent!",
+          description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+        });
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      toast({
+        title: "❌ Submission Error",
+        description: "There was an error sending your message. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <>
       <Helmet>
         <title>Contact Us - SkillzLab | Get in Touch</title>
-        <meta name="description" content="Contact SkillzLab for support, questions, or enrollment assistance. We're here to help you start your mobile learning journey. Email, phone, and WhatsApp support available." />
+        <meta name="description" content="Contact SkillzLab for support, questions, or enrollment assistance. Email: skillzlab.io@gmail.com | Phone: +880 1877538505 | WhatsApp: +880 1877538505 | Location: Chattagram, Bangladesh" />
       </Helmet>
 
-      <div className="min-h-screen pt-24">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+      <div className="min-h-screen pt-24 bg-white">
+            <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
           <div className="container mx-auto px-4 text-center">
             <motion.h1
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-4xl md:text-6xl font-bold mb-6 text-gray-900"
             >
               <span className="gradient-text">Contact Us</span>
             </motion.h1>
@@ -112,15 +134,13 @@ const Contact = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
+              className="text-xl text-gray-600 max-w-3xl mx-auto"
             >
-              Have questions about our courses? Need support? Want to learn more about mobile-first education? 
-              We're here to help you every step of the way.
+              Have questions about our courses? Need support? We're here to help you every step of the way.
             </motion.p>
           </div>
         </section>
-
-        {/* Contact Information */}
+           {/* Contact Information */}
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
@@ -131,14 +151,22 @@ const Contact = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 >
-                  <Card className="glass-effect border-gray-700 text-center hover:neon-glow transition-all duration-300 h-full">
-                    <CardContent className="p-6">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Card 
+                    className="bg-white border border-gray-200 hover:shadow-lg transition-shadow h-full cursor-pointer"
+                    onClick={info.action || undefined}
+                  >
+                    <CardContent className="p-6 text-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         {info.icon}
                       </div>
-                      <h3 className="text-xl font-bold mb-2 text-white">{info.title}</h3>
-                      <p className="text-blue-400 font-semibold mb-2">{info.details}</p>
-                      <p className="text-gray-400 text-sm">{info.description}</p>
+                      <h3 className="text-xl font-bold mb-2 text-gray-900">{info.title}</h3>
+                      <p className="text-blue-600 font-semibold mb-2">{info.details}</p>
+                      <p className="text-gray-600 text-sm">{info.description}</p>
+                      {info.action && (
+                        <Button variant="link" className="text-blue-600 mt-3">
+                          Click to connect
+                        </Button>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -148,7 +176,7 @@ const Contact = () => {
         </section>
 
         {/* Contact Form & Map */}
-        <section className="py-16 bg-black/20">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Contact Form */}
@@ -157,16 +185,16 @@ const Contact = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <Card className="glass-effect border-gray-700">
+                <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <CardTitle className="text-2xl gradient-text">Send us a Message</CardTitle>
-                    <p className="text-gray-300">We'll get back to you within 24 hours</p>
+                    <CardTitle className="text-2xl text-gray-900">Send us a Message</CardTitle>
+                    <p className="text-gray-600">We'll get back to you within 24 hours</p>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="name" className="text-gray-300">Name *</Label>
+                          <Label htmlFor="name" className="text-gray-700">Name *</Label>
                           <Input
                             id="name"
                             name="name"
@@ -174,12 +202,12 @@ const Contact = () => {
                             placeholder="Your full name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="bg-gray-800/50 border-gray-600 text-white"
+                            className="bg-white border-gray-300"
                             required
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email" className="text-gray-300">Email *</Label>
+                          <Label htmlFor="email" className="text-gray-700">Email *</Label>
                           <Input
                             id="email"
                             name="email"
@@ -187,14 +215,14 @@ const Contact = () => {
                             placeholder="your@email.com"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="bg-gray-800/50 border-gray-600 text-white"
+                            className="bg-white border-gray-300"
                             required
                           />
                         </div>
                       </div>
 
                       <div>
-                        <Label htmlFor="subject" className="text-gray-300">Subject</Label>
+                        <Label htmlFor="subject" className="text-gray-700">Subject</Label>
                         <Input
                           id="subject"
                           name="subject"
@@ -202,19 +230,19 @@ const Contact = () => {
                           placeholder="What's this about?"
                           value={formData.subject}
                           onChange={handleInputChange}
-                          className="bg-gray-800/50 border-gray-600 text-white"
+                          className="bg-white border-gray-300"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="message" className="text-gray-300">Message *</Label>
+                        <Label htmlFor="message" className="text-gray-700">Message *</Label>
                         <Textarea
                           id="message"
                           name="message"
                           placeholder="Tell us how we can help you..."
                           value={formData.message}
                           onChange={handleInputChange}
-                          className="bg-gray-800/50 border-gray-600 text-white min-h-[120px]"
+                          className="bg-white border-gray-300 min-h-[120px]"
                           required
                         />
                       </div>
@@ -222,10 +250,23 @@ const Contact = () => {
                       <Button
                         type="submit"
                         size="lg"
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 neon-glow"
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white"
+                        disabled={isSubmitting}
                       >
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Message
+                        {isSubmitting ? (
+                          <span className="flex items-center">
+                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Sending...
+                          </span>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4 mr-2" />
+                            Send Message
+                          </>
+                        )}
                       </Button>
                     </form>
                   </CardContent>
@@ -240,97 +281,65 @@ const Contact = () => {
                 className="space-y-8"
               >
                 {/* Map */}
-                <Card className="glass-effect border-gray-700">
+                <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <CardTitle className="text-xl">Our Location</CardTitle>
+                    <CardTitle className="text-xl text-gray-900">Our Location</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <img  
-                        className="w-full h-full object-cover rounded-lg"
-                        alt="SkillzLab office location map in Dhaka, Bangladesh"
-                       src="https://images.unsplash.com/photo-1524661135-423995f22d0b" />
+                    <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14767.26101840732!2d91.833235!3d22.341799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30acd89a9627f345%3A0x564a98e9976a1a3!2sChattogram!5e0!3m2!1sen!2sbd!4v1620000000000!5m2!1sen!2sbd"
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        title="SkillzLab Location in Chattagram"
+                      ></iframe>
                     </div>
-                    <div className="mt-4 space-y-2 text-gray-300">
+                    <div className="mt-4 space-y-2 text-gray-600">
                       <p className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-blue-400" />
+                        <MapPin className="w-4 h-4 text-blue-600" />
                         <span>Chattagram, Bangladesh</span>
                       </p>
                       <p className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-green-400" />
+                        <Clock className="w-4 h-4 text-blue-600" />
                         <span>Mon-Sun: 9:00 AM - 9:00 PM</span>
                       </p>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Office Hours */}
-                <Card className="glass-effect border-gray-700">
+                {/* Quick Support */}
+                <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <CardTitle className="text-xl">Office Hours</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Monday - Friday</span>
-                        <span className="text-blue-400 font-semibold">9:00 AM - 9:00 PM</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Saturday</span>
-                        <span className="text-blue-400 font-semibold">10:00 AM - 8:00 PM</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Sunday</span>
-                        <span className="text-blue-400 font-semibold">10:00 AM - 6:00 PM</span>
-                      </div>
-                      <div className="border-t border-gray-600 pt-3 mt-3">
-                        <p className="text-sm text-gray-400">
-                          WhatsApp support available 24/7 for urgent queries
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Quick Links */}
-                <Card className="glass-effect border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Quick Support</CardTitle>
+                    <CardTitle className="text-xl text-gray-900">Quick Support</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <Button 
                         variant="outline" 
-                        className="w-full justify-start border-green-400 text-green-400 hover:bg-green-400 hover:text-white"
-                        onClick={() => toast({
-                          title: "🚧 WhatsApp Support",
-                          description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-                        })}
+                        className="w-full justify-start border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                        onClick={() => window.open('https://wa.me/8801877538505', '_blank')}
                       >
                         <MessageCircle className="w-4 h-4 mr-2" />
                         WhatsApp Support
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="w-full justify-start border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
-                        onClick={() => toast({
-                          title: "🚧 Email Support",
-                          description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-                        })}
+                        className="w-full justify-start border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                        onClick={() => window.location.href = 'mailto:skillzlab.io@gmail.com'}
                       >
                         <Mail className="w-4 h-4 mr-2" />
                         Email Support
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="w-full justify-start border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
-                        onClick={() => toast({
-                          title: "🚧 Phone Support",
-                          description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-                        })}
+                        className="w-full justify-start border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                        onClick={() => window.location.href = 'tel:+8801877538505'}
                       >
                         <Phone className="w-4 h-4 mr-2" />
-                        Call Us
+                        Call Now
                       </Button>
                     </div>
                   </CardContent>
@@ -349,10 +358,10 @@ const Contact = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-12"
             >
-              <h2 className="text-4xl font-bold mb-6">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">
                 Common <span className="gradient-text">Questions</span>
               </h2>
-              <p className="text-xl text-gray-300">
+              <p className="text-xl text-gray-600">
                 Quick answers to frequently asked questions
               </p>
             </motion.div>
@@ -364,16 +373,16 @@ const Contact = () => {
                   answer: "We typically respond within 2-4 hours during business hours, and within 24 hours on weekends."
                 },
                 {
-                  question: "Can I schedule a call with an advisor?",
-                  answer: "Yes! Contact us to schedule a free consultation call to discuss your learning goals and course options."
+                  question: "What's the best way to get quick support?",
+                  answer: "For fastest response, use our WhatsApp support at +880 1877538505."
                 },
                 {
-                  question: "Do you offer technical support during courses?",
-                  answer: "Absolutely! We provide technical support via WhatsApp, email, and our community forum throughout your learning journey."
+                  question: "Can I visit your office in Chattagram?",
+                  answer: "Yes! We're located in Chattagram. Please contact us in advance to schedule a visit."
                 },
                 {
-                  question: "Can I visit your office in person?",
-                  answer: "Yes, you can visit our office in Dhaka. Please contact us in advance to schedule an appointment."
+                  question: "Do you offer phone consultations?",
+                  answer: "Absolutely! Call us at +880 1877538505 during business hours for immediate assistance."
                 }
               ].map((faq, index) => (
                 <motion.div
@@ -382,10 +391,10 @@ const Contact = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                 >
-                  <Card className="glass-effect border-gray-700 h-full">
+                  <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow h-full">
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
-                      <p className="text-gray-300">{faq.answer}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                      <p className="text-gray-600">{faq.answer}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
