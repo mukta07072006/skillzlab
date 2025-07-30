@@ -8,7 +8,7 @@ const WhatsAppFloat = () => {
   const handleWhatsAppClick = () => {
     toast({
       title: "🚧 WhatsApp Integration",
-      description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      description: "Coming Soon",
     });
   };
 

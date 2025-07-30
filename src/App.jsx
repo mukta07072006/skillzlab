@@ -10,8 +10,11 @@ import CourseDetail from '@/pages/CourseDetail';
 import About from '@/pages/About';
 import SuccessStories from '@/pages/SuccessStories';
 import JoinNow from '@/pages/JoinNow';
-import Contact from '@/pages/Contact.jsx';
-import Blog from '@/pages/Blog.jsx';
+import Contact from '@/pages/Contact';
+import Login from '@/pages/Login'; // Add this import
+import Signup from '@/pages/Signup'; // Add this import
+import Profile from '@/pages/Profile'; // Add this import
+import ProtectedRoute from '@/components/ProtectedRoute'; // Recommended for auth protection
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
         <Header />
         <main className="flex-1">
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:courseId" element={<CourseDetail />} />
@@ -27,7 +31,21 @@ function App() {
             <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/join-now" element={<JoinNow />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* Protected Routes (require authentication) */}
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Add more protected routes as needed */}
+            {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} */}
           </Routes>
         </main>
         <Footer />

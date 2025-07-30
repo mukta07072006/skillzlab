@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Users, Star, Play, CheckCircle, Smartphone, Award, Download } from 'lucide-react';
+import { Clock, Users, Star, Play, CheckCircle, Smartphone, Award, Download, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
@@ -12,6 +12,9 @@ import poster3 from '@/assets/poster3.jpg';
 
 const CourseDetail = () => {
   const { courseId } = useParams();
+
+  // Google Form URL - Replace with your actual form URL
+  const ENROLLMENT_FORM_URL = "https://docs.google.com/forms/d/YOUR_FORM_ID/viewform";
 
   const courseData = {
     'creative-design': {
@@ -315,16 +318,21 @@ const CourseDetail = () => {
   }
 
   const handleEnroll = () => {
+    // Open Google Form in new tab
+    window.open(ENROLLMENT_FORM_URL, "_blank");
+    
+    // Show confirmation toast
     toast({
-      title: "🚧 Site is under development",
-      description: "Coming Soon",
+      title: "Enrollment Form Opened",
+      description: "Please complete the form to reserve your spot. We'll contact you for payment details.",
+      duration: 5000,
     });
   };
 
   const handleVideoPreview = () => {
     toast({
-      title: "🚧 Site is under development",
-      description: "Coming Soon",
+      title: "Course Preview Coming Soon",
+      description: "We're preparing sample lessons for this course",
     });
   };
 
@@ -350,6 +358,24 @@ const CourseDetail = () => {
                 </h1>
                 <p className="text-xl text-gray-600 mb-6">{course.subtitle}</p>
                 <p className="text-gray-700 mb-8">{course.description}</p>
+
+                {/* Temporary Enrollment Notice */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded"
+                >
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-yellow-800">Temporary Enrollment Process</p>
+                      <p className="text-yellow-700 text-sm">
+                        After form submission, we'll contact you within 24 hours..
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
 
                 {/* Course Stats */}
                 <div className="flex flex-wrap gap-6 mb-8">
@@ -384,7 +410,7 @@ const CourseDetail = () => {
                     onClick={handleEnroll}
                     className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8"
                   >
-                    Enroll Now
+                    Enroll via Google Form
                   </Button>
                 </div>
               </motion.div>
@@ -558,7 +584,7 @@ const CourseDetail = () => {
                         onClick={handleEnroll}
                         className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white"
                       >
-                        Enroll Now
+                        Enroll via Google Form
                       </Button>
                     </CardContent>
                   </Card>

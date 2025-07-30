@@ -109,3 +109,26 @@ body {
 .yellow-border-accent {
   border-color: hsl(45, 100%, 50%);
 }
+/* src/styles.css */
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.auth-buttons a, .auth-buttons button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.auth-buttons a {
+  background: #2a74ff;
+  color: #ffffff;
+}
+
+.auth-buttons button {
+  background: #ffc30e;
+  color: rgb(1, 1, 1);
+  border: none;
+  cursor: pointer;
+}

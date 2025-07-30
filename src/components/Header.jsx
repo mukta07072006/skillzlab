@@ -1,22 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react'; // Added User icon
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/logo.png'; // Import your logo
+import logo from '@/assets/logo.png';
+import { supabase } from '@/lib/supabase'; // Make sure you have this setup
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
+  // Check auth state
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Scroll effect
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navItems = [ 'Home', 'Courses', 'About', 'Success Stories', 'Contact' ].map(name => ({
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  const navItems = ['Home', 'Courses', 'About', 'Success Stories', 'Contact'].map(name => ({
     name,
     path: name === 'Home' ? '/' : `/${name.toLowerCase().replace(/\s+/g, '-')}`
   }));
@@ -55,11 +79,34 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <Link to="/join-now">
-              <Button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-md shadow-sm">
-                Join Now
-              </Button>
-            </Link>
+            
+            {/* Auth Buttons - Desktop */}
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <Link to="/profile" className="flex items-center space-x-1">
+                  <User size={18} />
+                  <span className="text-sm font-medium">Profile</span>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  onClick={handleLogout}
+                  className="text-sm"
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link to="/login" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                  Login
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-md shadow-sm">
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -93,15 +140,47 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <Link 
-              to="/join-now" 
-              onClick={() => setIsOpen(false)}
-              className="block mt-2"
-            >
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-md shadow-sm">
-                Join Now
-              </Button>
-            </Link>
+            
+            {/* Auth Buttons - Mobile */}
+            {user ? (
+              <>
+                <Link
+                  to="/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="block py-3 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-left py-3 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="block py-3 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/signup" 
+                  onClick={() => setIsOpen(false)}
+                  className="block mt-2"
+                >
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-md shadow-sm">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </motion.div>
         )}
       </div>
