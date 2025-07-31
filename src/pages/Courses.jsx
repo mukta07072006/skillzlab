@@ -42,7 +42,7 @@ const Courses = () => {
       highlights: ['AI-powered coding', 'Mobile development', 'Responsive design', 'Deployment strategies', 'Certificate of completion']
     },
     {
-      id: 'Video Editing',
+      id: 'video-editing',
       title: 'Basic to Pro Video Editing',
       category: 'editing',
       level: 'All Levels',

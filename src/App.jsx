@@ -15,7 +15,8 @@ import Login from '@/pages/Login'; // Add this import
 import Signup from '@/pages/Signup'; // Add this import
 import Profile from '@/pages/Profile'; // Add this import
 import ProtectedRoute from '@/components/ProtectedRoute'; // Recommended for auth protection
-
+import EnrollForm from '@/pages/EnrollForm';
+import Admin from '@/pages/Admin';
 function App() {
   return (
     <Router>
@@ -33,6 +34,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/enroll/:courseId" element={<EnrollForm />} />
+            <Route path="/admin" element={<Admin />} />
 
             {/* Protected Routes (require authentication) */}
             <Route 

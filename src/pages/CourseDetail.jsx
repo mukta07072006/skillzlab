@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Users, Star, Play, CheckCircle, Smartphone, Award, Download, AlertTriangle } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
+import { supabase } from '@/lib/supabase';  // Make sure this path is correct
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
+import { Clock, Users, Star, Play, CheckCircle, Smartphone, Award, Download, AlertTriangle } from 'lucide-react';
 import poster1 from '@/assets/poster1.jpg';
 import poster2 from '@/assets/poster2.jpg';
 import poster3 from '@/assets/poster3.jpg';
 
+
 const CourseDetail = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
 
-  // Google Form URL - Replace with your actual form URL
-  const ENROLLMENT_FORM_URL = "https://docs.google.com/forms/d/YOUR_FORM_ID/viewform";
+  // State for enrollment check
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [loadingCheck, setLoadingCheck] = useState(true);
 
   const courseData = {
     'creative-design': {
@@ -192,7 +196,7 @@ const CourseDetail = () => {
         'Mobile development environment',
       ]
     },
-    'Video Editing': {
+    'video-editing': {
       title: 'Basic to Advanced Video Editing',
       subtitle: 'Everything from basic to advanced skills in one package',
       level: 'Video Editing',
@@ -301,8 +305,9 @@ const CourseDetail = () => {
     }
   };
 
-  const course = courseData[courseId];
+    const course = courseData[courseId];
 
+  // Check if course exists
   if (!course) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center bg-white">
@@ -317,16 +322,45 @@ const CourseDetail = () => {
     );
   }
 
-  const handleEnroll = () => {
-    // Open Google Form in new tab
-    window.open(ENROLLMENT_FORM_URL, "_blank");
-    
-    // Show confirmation toast
-    toast({
-      title: "Enrollment Form Opened",
-      description: "Please complete the form to reserve your spot. We'll contact you for payment details.",
-      duration: 5000,
-    });
+  // Effect: Check if user is enrolled for this course
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        setIsEnrolled(false);
+        setLoadingCheck(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('enrollments')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('course_id', courseId)
+        .single();
+
+      setIsEnrolled(!!data);
+      setLoadingCheck(false);
+    };
+
+    checkEnrollment();
+  }, [courseId]);
+
+   const handleEnroll = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      toast({
+        title: 'Login Required',
+        description: 'Please log in to enroll in this course.',
+        variant: 'destructive'
+      });
+      navigate('/login');
+      return;
+    }
+
+    navigate(`/enroll/${courseId}`);
   };
 
   const handleVideoPreview = () => {
@@ -397,22 +431,30 @@ const CourseDetail = () => {
                   </div>
                 </div>
 
-                {/* Price and CTA */}
-                <div className="flex items-center space-x-6">
-                  <div>
-                    <span className="text-4xl font-bold text-blue-600">{course.price}</span>
-                    {course.price !== '399' && (
-                      <span className="text-gray-600 ml-2">one-time payment</span>
-                    )}
-                  </div>
-                  <Button 
-                    size="lg" 
-                    onClick={handleEnroll}
-                    className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8"
-                  >
-                    Enroll via Google Form
-                  </Button>
-                </div>
+               {/* Price and CTA */}
+<div className="flex items-center space-x-6">
+  <div>
+    <span className="text-4xl font-bold text-blue-600">
+      ৳{course.price}
+    </span>
+    {course.price !== 399 && (
+      <span className="text-gray-600 ml-2">one-time payment</span>
+    )}
+  </div>
+
+  <Button
+        onClick={handleEnroll}
+        disabled={isEnrolled || loadingCheck}
+      >
+        {loadingCheck
+          ? 'Checking enrollment...'
+          : isEnrolled
+            ? 'Already Enrolled'
+            : 'Enroll Now'}
+      </Button>
+
+</div>
+
               </motion.div>
 
               <motion.div
@@ -574,19 +616,29 @@ const CourseDetail = () => {
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
                   <Card className="bg-white border border-gray-200 shadow-sm text-center">
-                    <CardContent className="p-6">
-                      <div className="text-3xl font-bold text-blue-600 mb-2">{course.price}</div>
-                      {course.price !== '399' && (
-                        <p className="text-gray-600 text-sm mb-4">One-time payment</p>
-                      )}
-                      <Button 
-                        size="lg" 
-                        onClick={handleEnroll}
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white"
-                      >
-                        Enroll via Google Form
-                      </Button>
-                    </CardContent>
+  <CardContent className="p-6">
+    <div className="text-3xl font-bold text-blue-600 mb-2">
+      ৳{course.price}
+    </div>
+
+    {course.price !== 399 && (
+      <p className="text-gray-600 text-sm mb-4">One-time payment</p>
+    )}
+
+  <Button
+        onClick={handleEnroll}
+        disabled={isEnrolled || loadingCheck}
+      >
+        {loadingCheck
+          ? 'Checking enrollment...'
+          : isEnrolled
+            ? 'Already Enrolled'
+            : 'Enroll Now'}
+      </Button>
+
+
+  </CardContent>
+
                   </Card>
                 </motion.div>
               </div>
