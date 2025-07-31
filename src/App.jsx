@@ -12,7 +12,7 @@ import SuccessStories from '@/pages/SuccessStories';
 import JoinNow from '@/pages/JoinNow';
 import Contact from '@/pages/Contact';
 import Login from '@/pages/Login'; // Add this import
-import Signup from '@/pages/Signup'; // Add this import
+import Signup from '@/pages/SignUp'; // Add this import
 import Profile from '@/pages/Profile'; // Add this import
 import ProtectedRoute from '@/components/ProtectedRoute'; // Recommended for auth protection
 import EnrollForm from '@/pages/EnrollForm';
