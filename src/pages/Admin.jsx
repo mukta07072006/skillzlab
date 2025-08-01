@@ -196,10 +196,6 @@ export default function Admin() {
       <div className="bg-white dark:bg-gray-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <Shield className="h-8 w-8 text-[#2a74ff]" />
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
-            </div>
             <div className="flex space-x-4">
               <button
                 onClick={() => setActiveTab('pending')}
