@@ -13,6 +13,8 @@ import { toast } from '@/components/ui/use-toast';
 import poster1 from '@/assets/poster1.jpg';
 import poster2 from '@/assets/poster2.jpg';
 import poster3 from '@/assets/poster3.jpg';
+import heroVideo from '@/assets/skillzlab-intro.mp4';
+
 
 const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -119,7 +121,7 @@ const Home = () => {
   const handleVideoPlay = () => {
     toast({
       title: "🚧 Video Feature",
-      description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      description: "This feature isn't implemented yet.",
     });
   };
 
@@ -203,11 +205,20 @@ const Home = () => {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="relative max-w-2xl mx-auto"
               >
-                <div className="relative bg-white/70 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white/80">
-                  <div className="aspect-video bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center cursor-pointer" onClick={handleVideoPlay}>
-                    <Play className="w-16 h-16 text-primary" />
-                  </div>
-                </div>
+                <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
+  <video
+    className="w-full h-full object-cover"
+    autoPlay
+    loop
+    muted
+    playsInline
+    preload="auto"
+  >
+    <source src={heroVideo} type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
               </motion.div>
             </div>
           </div>
