@@ -21,8 +21,30 @@ export default function EnrollForm() {
     paymentMethod: 'bKash',
   });
 
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponStatus, setCouponStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  const validateCoupon = async () => {
+    if (!couponCode) return;
+
+    const { data, error } = await supabase
+      .from('coupons')
+      .select('*')
+      .eq('code', couponCode.trim())
+      .eq('is_active', true)
+      .single();
+
+    if (data && !error) {
+      setDiscount(data.discount_percent);
+      setCouponStatus('success');
+    } else {
+      setDiscount(0);
+      setCouponStatus('error');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +66,7 @@ export default function EnrollForm() {
         payment_method: formData.paymentMethod,
         transaction_id: formData.transactionId,
         status: 'pending',
+        coupon_code: couponCode || null,
       },
     ]);
 
@@ -64,20 +87,30 @@ export default function EnrollForm() {
     );
   }
 
+  const discountedPrice = Math.round(course.price * (1 - discount / 100));
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-2xl mt-10 border border-[#2a74ff]/20 animate-fade-in">
       <h2 className=" text-center text-4xl font-semibold text-gray-800 tracking-tight mb-1">
-    Enroll Now in
-  </h2>
+        Enroll Now in
+      </h2>
 
       <div className="mb-8 text-center">
-  <h3 className="text-3xl md:text-4xl font-bold text-[#2a74ff] mb-2 animate-pulse-slow">
-    {course.name}
-  </h3>
-  <div className="inline-flex items-center justify-center mt-2 bg-yellow-100 border border-yellow-300 text-yellow-700 font-semibold px-4 py-1.5 rounded-full shadow-sm">
-    💰 Course Price: <span className="ml-2 text-[#2a74ff] font-bold">৳{course.price}</span>
-  </div>
-</div>
+        <h3 className="text-3xl md:text-4xl font-bold text-[#2a74ff] mb-2 animate-pulse-slow">
+          {course.name}
+        </h3>
+        <div className="inline-flex items-center justify-center mt-2 bg-yellow-100 border border-yellow-300 text-yellow-700 font-semibold px-4 py-1.5 rounded-full shadow-sm">
+          💰 Course Price:
+          <span className="ml-2 text-[#2a74ff] font-bold line-through">
+            ৳{course.price}
+          </span>
+          {discount > 0 && (
+            <span className="ml-2 text-green-600 font-bold">
+              ৳{discountedPrice}
+            </span>
+          )}
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <InputField
@@ -92,6 +125,27 @@ export default function EnrollForm() {
           type="tel"
           onChange={(val) => setFormData({ ...formData, phone: val })}
         />
+
+        <div className="flex items-center space-x-2">
+          <InputField
+            label="Coupon Code"
+            value={couponCode}
+            onChange={setCouponCode}
+          />
+          <button
+            type="button"
+            onClick={validateCoupon}
+            className="mt-6 px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition"
+          >
+            Apply
+          </button>
+        </div>
+        {couponStatus === 'success' && (
+          <p className="text-sm text-green-600 mt-1">✅ Coupon applied! {discount}% discount.</p>
+        )}
+        {couponStatus === 'error' && (
+          <p className="text-sm text-red-600 mt-1">❌ Invalid or expired coupon.</p>
+        )}
 
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">Payment Method</label>
@@ -114,8 +168,8 @@ export default function EnrollForm() {
 
         <div className="bg-[#2a74ff]/10 p-4 rounded-md border border-[#2a74ff]/30 text-sm">
           <h3 className="font-semibold mb-2 text-[#2a74ff]">📌 Payment Instructions</h3>
-          <p>Send <strong className="text-yellow-500">৳{course.price}</strong> to:</p>
-          <p><strong>bKash:</strong> 017XXXXXXXX</p>
+          <p>Send <strong className="text-yellow-500">৳{discount > 0 ? discountedPrice : course.price}</strong> to:</p>
+          <p><strong>bKash:</strong> 01813311034</p>
           <p><strong>Nagad:</strong> 01877538505</p>
           <p>Use this course code in the reference/message: <strong>{courseId}</strong></p>
         </div>
@@ -138,10 +192,10 @@ export default function EnrollForm() {
   );
 }
 
-// 👇 Reusable Input Field Component
+// Reusable Input Field
 function InputField({ label, value, onChange, type = "text" }) {
   return (
-    <div className="group">
+    <div className="group w-full">
       <label className="block mb-1 text-sm font-medium text-gray-700">{label}</label>
       <input
         type={type}

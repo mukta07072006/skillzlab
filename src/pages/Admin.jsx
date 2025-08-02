@@ -9,38 +9,35 @@ import {
   BookOpen,
   CheckCircle,
   XCircle,
+  Plus,
+  Trash2,
+  Activity,
+  CreditCard,
+  User,
+  Bookmark,
+  TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Admin() {
-  const [pendingEnrollments, setPendingEnrollments] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [authChecking, setAuthChecking] = useState(true);
-  const [approvingId, setApprovingId] = useState(null);
-  const [stats, setStats] = useState({
-    totalPending: 0,
-    approvedToday: 0,
-    totalCourses: 0,
-  });
   const [activeTab, setActiveTab] = useState('pending');
-
-  // New state for logged in users data and loading
+  const [pendingEnrollments, setPendingEnrollments] = useState([]);
+  const [approvingId, setApprovingId] = useState(null);
+  const [stats, setStats] = useState({ totalPending: 0, approvedToday: 0, totalCourses: 0 });
   const [activeUsers, setActiveUsers] = useState([]);
   const [loadingActiveUsers, setLoadingActiveUsers] = useState(false);
+  const [coupons, setCoupons] = useState([]);
+  const [loadingCoupons, setLoadingCoupons] = useState(false);
+  const [newCoupon, setNewCoupon] = useState({ code: '', discount_percent: '' });
 
   const navigate = useNavigate();
 
-  // Check admin permission on mount
+  // Check if user is admin
   useEffect(() => {
     const checkAdmin = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        navigate('/');
-        return;
-      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return navigate('/');
 
       const { data: profile, error } = await supabase
         .from('profiles')
@@ -49,8 +46,7 @@ export default function Admin() {
         .single();
 
       if (error || !profile || profile.role !== 'admin') {
-        navigate('/');
-        return;
+        return navigate('/');
       }
 
       setAuthChecking(false);
@@ -59,33 +55,21 @@ export default function Admin() {
     checkAdmin();
   }, [navigate]);
 
-  // Fetch data after permission check
+  // Fetch pending enrollments and stats
   useEffect(() => {
     if (authChecking) return;
 
-    async function fetchData() {
-      // Fetch pending enrollments
+    const fetchData = async () => {
       const { data, error } = await supabase
         .from('pending_enrollments')
-        .select(`
-          id,
-          user_id,
-          course_id,
-          name,
-          phone,
-          payment_method,
-          transaction_id,
-          status,
-          created_at
-        `)
+        .select('*')
         .eq('status', 'pending');
 
       if (!error) {
         setPendingEnrollments(data);
-        setStats(prev => ({ ...prev, totalPending: data.length }));
+        setStats((prev) => ({ ...prev, totalPending: data.length }));
       }
 
-      // Fetch stats
       const { count: approvedToday } = await supabase
         .from('pending_enrollments')
         .select('*', { count: 'exact' })
@@ -96,74 +80,46 @@ export default function Admin() {
         .from('courses')
         .select('*', { count: 'exact' });
 
-      setStats(prev => ({
+      setStats((prev) => ({
         ...prev,
         approvedToday: approvedToday || 0,
         totalCourses: totalCourses || 0,
       }));
-
-      setLoading(false);
-    }
+    };
 
     fetchData();
   }, [authChecking]);
 
-  // Fetch active logged-in users and their enrollments when tab changes to activeUsers
+  // Fetch active logged-in users when activeTab is 'activeUsers'
   useEffect(() => {
     if (activeTab !== 'activeUsers') return;
 
-    async function fetchActiveUsers() {
+    const fetchActiveUsers = async () => {
       setLoadingActiveUsers(true);
 
-      // 1. Get sessions + user info
-      const { data: sessions, error: sessionsError } = await supabase
+      const { data: sessions, error } = await supabase
         .from('sessions')
-        .select(`
-          id,
-          last_seen,
-          user_id,
-          user:auth.users (
-            id,
-            email,
-            user_metadata
-          )
-        `);
+        .select('id, last_seen, user_id, user:auth.users (id, email, user_metadata)');
 
-      if (sessionsError) {
-        console.error('Error fetching sessions', sessionsError);
+      if (error) {
+        console.error('Error fetching sessions:', error);
         setLoadingActiveUsers(false);
         return;
       }
 
-      const userIds = sessions.map(s => s.user_id);
-
-      if (userIds.length === 0) {
-        setActiveUsers([]);
-        setLoadingActiveUsers(false);
-        return;
-      }
-
-      // 2. Fetch enrollments for those user_ids
-      const { data: enrollments, error: enrollmentsError } = await supabase
+      const userIds = sessions.map((s) => s.user_id);
+      const { data: enrollments } = await supabase
         .from('enrollments')
         .select('user_id, course_id')
         .in('user_id', userIds);
 
-      if (enrollmentsError) {
-        console.error('Error fetching enrollments', enrollmentsError);
-        setLoadingActiveUsers(false);
-        return;
-      }
-
-      // 3. Map user_id to courses array
-      const enrollmentsMap = enrollments.reduce((acc, cur) => {
+      const enrollmentsMap = enrollments?.reduce((acc, cur) => {
         if (!acc[cur.user_id]) acc[cur.user_id] = [];
         acc[cur.user_id].push(cur.course_id);
         return acc;
-      }, {});
+      }, {}) || {};
 
-      // 4. Combine sessions + user data + enrolled courses count
-      const combined = sessions.map(session => ({
+      const combined = sessions.map((session) => ({
         id: session.id,
         last_seen: session.last_seen,
         user_id: session.user_id,
@@ -174,362 +130,428 @@ export default function Admin() {
 
       setActiveUsers(combined);
       setLoadingActiveUsers(false);
-    }
+    };
 
     fetchActiveUsers();
   }, [activeTab]);
 
-  const confirmEnrollment = async (pendingId) => {
-    setApprovingId(pendingId);
+  // Fetch active coupons when activeTab is 'coupons'
+  useEffect(() => {
+    if (activeTab !== 'coupons') return;
 
-    try {
-      // 1. Fetch pending enrollment
-      const { data: pending, error: fetchError } = await supabase
-        .from('pending_enrollments')
+    const fetchCoupons = async () => {
+      setLoadingCoupons(true);
+      const { data, error } = await supabase
+        .from('coupons')
         .select('*')
-        .eq('id', pendingId)
-        .single();
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
 
-      if (fetchError || !pending) throw new Error('Pending enrollment not found');
+      if (!error) setCoupons(data || []);
+      setLoadingCoupons(false);
+    };
 
-      // 2. Check if already enrolled
-      const { data: existingEnrollment } = await supabase
-        .from('enrollments')
-        .select('*')
-        .eq('user_id', pending.user_id)
-        .eq('course_id', pending.course_id)
-        .maybeSingle();
+    fetchCoupons();
+  }, [activeTab]);
 
-      if (existingEnrollment) throw new Error('User is already enrolled');
+  // Approve enrollment
+  const confirmEnrollment = async (id) => {
+    setApprovingId(id);
 
-      // 3. Insert confirmed enrollment
-      const { error: insertError } = await supabase.from('enrollments').insert([
-        {
-          user_id: pending.user_id,
-          course_id: pending.course_id,
-        },
-      ]);
+    const { data: pending, error: fetchError } = await supabase
+      .from('pending_enrollments')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-      if (insertError) throw new Error('Failed to confirm enrollment');
-
-      // 4. Update pending status
-      const { error: updateError } = await supabase
-        .from('pending_enrollments')
-        .update({ status: 'approved' })
-        .eq('id', pendingId);
-
-      if (updateError) throw new Error('Failed to update status');
-
-      // 5. Update UI
-      setPendingEnrollments((prev) => prev.filter((enroll) => enroll.id !== pendingId));
-      setStats((prev) => ({
-        ...prev,
-        totalPending: prev.totalPending - 1,
-        approvedToday: prev.approvedToday + 1,
-      }));
-    } catch (error) {
-      alert(error.message);
-    } finally {
+    if (fetchError || !pending) {
+      alert('Error fetching enrollment');
       setApprovingId(null);
+      return;
     }
+
+    const { data: exists } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('user_id', pending.user_id)
+      .eq('course_id', pending.course_id)
+      .maybeSingle();
+
+    if (exists) {
+      alert('User already enrolled');
+      setApprovingId(null);
+      return;
+    }
+
+    await supabase.from('enrollments').insert([
+      { user_id: pending.user_id, course_id: pending.course_id },
+    ]);
+
+    await supabase
+      .from('pending_enrollments')
+      .update({ status: 'approved' })
+      .eq('id', id);
+
+    setPendingEnrollments((prev) => prev.filter((e) => e.id !== id));
+    setStats((prev) => ({ ...prev, totalPending: prev.totalPending - 1, approvedToday: prev.approvedToday + 1 }));
+    setApprovingId(null);
   };
 
-  const rejectEnrollment = async (pendingId) => {
+  // Reject enrollment
+  const rejectEnrollment = async (id) => {
     if (!confirm('Are you sure you want to reject this enrollment?')) return;
 
-    try {
-      const { error } = await supabase
-        .from('pending_enrollments')
-        .update({ status: 'rejected' })
-        .eq('id', pendingId);
+    await supabase
+      .from('pending_enrollments')
+      .update({ status: 'rejected' })
+      .eq('id', id);
 
-      if (error) throw error;
+    setPendingEnrollments((prev) => prev.filter((e) => e.id !== id));
+    setStats((prev) => ({ ...prev, totalPending: prev.totalPending - 1 }));
+  };
 
-      setPendingEnrollments((prev) => prev.filter((enroll) => enroll.id !== pendingId));
-      setStats((prev) => ({ ...prev, totalPending: prev.totalPending - 1 }));
-    } catch (error) {
-      alert('Failed to reject enrollment');
+  // Add a new coupon
+  const handleAddCoupon = async () => {
+    const { code, discount_percent } = newCoupon;
+
+    if (!code || !discount_percent) return alert('Fill all fields');
+
+    const { error } = await supabase.from('coupons').insert([
+      {
+        code: code.trim().toUpperCase(),
+        discount_percent: parseInt(discount_percent),
+      },
+    ]);
+
+    if (!error) {
+      setNewCoupon({ code: '', discount_percent: '' });
+      // Refresh coupons list
+      const { data, error: fetchError } = await supabase
+        .from('coupons')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+      if (!fetchError) setCoupons(data || []);
+      setActiveTab('coupons');
+    } else {
+      alert('Coupon already exists or invalid');
     }
   };
 
-  if (authChecking) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-12 h-12 border-4 border-[#2a74ff] border-t-transparent rounded-full"
-        />
-      </div>
-    );
-  }
+  // Soft-delete coupon (deactivate)
+  const deleteCoupon = async (id) => {
+    if (!confirm('Delete this coupon?')) return;
+
+    const { error } = await supabase
+      .from('coupons')
+      .update({ is_active: false })
+      .eq('id', id);
+
+    if (!error) {
+      setCoupons(coupons.filter((c) => c.id !== id));
+    }
+  };
+
+  if (authChecking) return (
+    <div className="flex justify-center items-center h-screen">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"
+      />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Admin Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setActiveTab('pending')}
-                className={`px-4 py-2 rounded-md font-medium ${
-                  activeTab === 'pending'
-                    ? 'bg-[#2a74ff] text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Pending
-              </button>
-              <button
-                onClick={() => setActiveTab('activeUsers')}
-                className={`px-4 py-2 rounded-md font-medium ${
-                  activeTab === 'activeUsers'
-                    ? 'bg-[#2a74ff] text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Logged In Users
-              </button>
-              <button
-                onClick={() => setActiveTab('stats')}
-                className={`px-4 py-2 rounded-md font-medium ${
-                  activeTab === 'stats'
-                    ? 'bg-[#2a74ff] text-white'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Statistics
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50 px-4 py-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <Shield className="w-6 h-6 text-blue-600" />
+            Admin Dashboard
+          </h1>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'pending' && (
-          <>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                Pending Enrollments ({pendingEnrollments.length})
-              </h2>
-              {loading && (
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                  <div className="w-4 h-4 border-2 border-[#2a74ff] border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Loading...
-                </div>
+        {/* Tab Navigation */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {[
+            { id: 'pending', icon: <Clock className="w-4 h-4" />, label: 'Pending' },
+            { id: 'activeUsers', icon: <UserCheck className="w-4 h-4" />, label: 'Active Users' },
+            { id: 'stats', icon: <Activity className="w-4 h-4" />, label: 'Statistics' },
+            { id: 'coupons', icon: <CreditCard className="w-4 h-4" />, label: 'Coupons' }
+          ].map((tab) => (
+            <motion.button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-white text-gray-600 hover:bg-gray-100 shadow-sm'
+              }`}
+            >
+              {tab.icon}
+              {tab.label}
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeTab === 'pending' && (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-blue-600" />
+                      Pending Enrollments
+                    </h2>
+                    <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                      {stats.totalPending} pending
+                    </div>
+                  </div>
+                  
+                  {pendingEnrollments.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500">
+                      No pending enrollments
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {pendingEnrollments.map((e) => (
+                        <motion.div 
+                          key={e.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="p-5 bg-gray-50 rounded-lg border border-gray-200"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                              <p className="text-sm text-gray-500">Name</p>
+                              <p className="font-medium">{e.name}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Phone</p>
+                              <p className="font-medium">{e.phone}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Course</p>
+                              <p className="font-medium">{e.course_id}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Payment</p>
+                              <p className="font-medium">{e.payment_method} - {e.transaction_id}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-3 justify-end">
+                            <button
+                              onClick={() => rejectEnrollment(e.id)}
+                              className="flex items-center gap-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                            >
+                              <XCircle className="w-4 h-4" />
+                              Reject
+                            </button>
+                            <button
+                              onClick={() => confirmEnrollment(e.id)}
+                              disabled={approvingId === e.id}
+                              className="flex items-center gap-1 px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-70"
+                            >
+                              {approvingId === e.id ? (
+                                <>
+                                  <motion.span
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                    className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full"
+                                  />
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  <CheckCircle className="w-4 h-4" />
+                                  Approve
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
-            </div>
 
-            {pendingEnrollments.length === 0 && !loading ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 text-center"
-              >
-                <Users className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">No pending enrollments</h3>
-                <p className="mt-2 text-gray-500 dark:text-gray-400">
-                  All enrollment requests have been processed.
-                </p>
-              </motion.div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <AnimatePresence>
-                  {pendingEnrollments.map((enroll) => (
-                    <motion.div
-                      key={enroll.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
-                    >
-                      <div className="p-6">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                              {enroll.name || 'No name provided'}
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              User ID: {enroll.user_id}
+              {activeTab === 'activeUsers' && (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                      <User className="w-5 h-5 text-blue-600" />
+                      Active Logged-in Users
+                    </h2>
+                    <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                      {activeUsers.length} active
+                    </div>
+                  </div>
+                  
+                  {loadingActiveUsers ? (
+                    <div className="flex justify-center py-12">
+                      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  ) : activeUsers.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500">
+                      No active users currently
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {activeUsers.map((user) => (
+                        <motion.div 
+                          key={user.id}
+                          whileHover={{ y: -2 }}
+                          className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                              <User className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{user.name}</p>
+                              <p className="text-sm text-gray-500">{user.email}</p>
+                            </div>
+                          </div>
+                          <div className="space-y-2 text-sm">
+                            <p className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-gray-400" />
+                              Last active: {new Date(user.last_seen).toLocaleString()}
+                            </p>
+                            <p className="flex items-center gap-2">
+                              <Bookmark className="w-4 h-4 text-gray-400" />
+                              Enrolled in {user.enrolledCoursesCount} courses
                             </p>
                           </div>
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                            PENDING
-                          </span>
-                        </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
 
-                        <div className="space-y-3">
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                            <BookOpen className="flex-shrink-0 h-4 w-4 text-[#2a74ff] mr-2" />
-                            <span>Course ID: {enroll.course_id}</span>
-                          </div>
-
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                            <span>{enroll.payment_method}: {enroll.transaction_id}</span>
-                          </div>
-
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                            <span>{enroll.phone || 'No phone provided'}</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-6 flex space-x-3">
-                          <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            disabled={approvingId === enroll.id}
-                            onClick={() => confirmEnrollment(enroll.id)}
-                            className={`flex-1 flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                              approvingId === enroll.id ? 'bg-yellow-500' : 'bg-[#2a74ff] hover:bg-[#195dc6]'
-                            }`}
-                          >
-                            {approvingId === enroll.id ? (
-                              <>
-                                <svg
-                                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                  ></circle>
-                                  <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  ></path>
-                                </svg>
-                                Approving...
-                              </>
-                            ) : (
-                              <>
-                                <CheckCircle className="h-4 w-4 mr-2" />
-                                Approve
-                              </>
-                            )}
-                          </motion.button>
-
-                          <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => rejectEnrollment(enroll.id)}
-                            className="flex-1 flex items-center justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                          >
-                            <XCircle className="h-4 w-4 mr-2" />
-                            Reject
-                          </motion.button>
-                        </div>
+              {activeTab === 'stats' && (
+                <>
+                  <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2 mb-6">
+                    <TrendingUp className="w-5 h-5 text-blue-600" />
+                    Statistics
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-blue-50 p-5 rounded-xl border border-blue-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-500">Pending Enrollments</h3>
+                        <Clock className="w-5 h-5 text-blue-400" />
                       </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-          </>
-        )}
+                      <p className="text-3xl font-bold text-blue-600">{stats.totalPending}</p>
+                    </div>
+                    <div className="bg-green-50 p-5 rounded-xl border border-green-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-500">Approved Today</h3>
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                      </div>
+                      <p className="text-3xl font-bold text-green-600">{stats.approvedToday}</p>
+                    </div>
+                    <div className="bg-purple-50 p-5 rounded-xl border border-purple-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-gray-500">Total Courses</h3>
+                        <BookOpen className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <p className="text-3xl font-bold text-purple-600">{stats.totalCourses}</p>
+                    </div>
+                  </div>
+                </>
+              )}
 
-        {activeTab === 'activeUsers' && (
-          <>
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-6">
-              Logged In Users ({activeUsers.length})
-            </h2>
+              {activeTab === 'coupons' && (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                      <CreditCard className="w-5 h-5 text-blue-600" />
+                      Manage Coupons
+                    </h2>
+                    <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                      {coupons.length} active
+                    </div>
+                  </div>
 
-            {loadingActiveUsers ? (
-              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                <div className="w-4 h-4 border-2 border-[#2a74ff] border-t-transparent rounded-full animate-spin mr-2"></div>
-                Loading...
-              </div>
-            ) : activeUsers.length === 0 ? (
-              <p className="text-gray-600 dark:text-gray-400">No users are currently logged in.</p>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <AnimatePresence>
-                  {activeUsers.map((user) => (
-                    <motion.div
-                      key={user.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300 p-6"
-                    >
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                        {user.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Email: {user.email}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                        Last Seen: {new Date(user.last_seen).toLocaleString()}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 font-semibold">
-                        Enrolled Courses: {user.enrolledCoursesCount}
-                      </p>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-          </>
-        )}
+                  <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 mb-8">
+                    <h3 className="font-medium text-gray-700 mb-3">Create New Coupon</h3>
+                    <div className="flex flex-col md:flex-row gap-3">
+                      <input
+                        type="text"
+                        value={newCoupon.code}
+                        onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value })}
+                        placeholder="Coupon code"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                      />
+                      <input
+                        type="number"
+                        value={newCoupon.discount_percent}
+                        onChange={(e) => setNewCoupon({ ...newCoupon, discount_percent: e.target.value })}
+                        placeholder="Discount %"
+                        className="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        min={1}
+                        max={100}
+                      />
+                      <button
+                        onClick={handleAddCoupon}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Coupon
+                      </button>
+                    </div>
+                  </div>
 
-        {activeTab === 'stats' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Quick Stats</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.div
-                whileHover={{ y: -5 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-[#2a74ff]"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Enrollments</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalPending}</p>
-                  </div>
-                  <div className="p-3 rounded-full bg-[#2a74ff]/10">
-                    <Clock className="h-6 w-6 text-[#2a74ff]" />
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -5 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-green-500"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Approved Today</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.approvedToday}</p>
-                  </div>
-                  <div className="p-3 rounded-full bg-green-500/10">
-                    <UserCheck className="h-6 w-6 text-green-500" />
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -5 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-purple-500"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Courses</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCourses}</p>
-                  </div>
-                  <div className="p-3 rounded-full bg-purple-500/10">
-                    <BookOpen className="h-6 w-6 text-purple-500" />
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
+                  {loadingCoupons ? (
+                    <div className="flex justify-center py-12">
+                      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  ) : coupons.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500">
+                      No active coupons available
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {coupons.map((coupon) => (
+                        <motion.div 
+                          key={coupon.id}
+                          whileHover={{ y: -2 }}
+                          className="bg-gray-50 p-4 rounded-lg border border-gray-200 flex justify-between items-center"
+                        >
+                          <div>
+                            <p className="font-bold text-lg text-blue-600">{coupon.code}</p>
+                            <p className="text-gray-600">{coupon.discount_percent}% discount</p>
+                            <p className="text-xs text-gray-400">
+                              Created: {new Date(coupon.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <button 
+                            onClick={() => deleteCoupon(coupon.id)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
