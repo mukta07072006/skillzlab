@@ -115,9 +115,20 @@ const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Us - SkillzLab | Get in Touch</title>
-        <meta name="description" content="Contact SkillzLab for support, questions, or enrollment assistance. Email: skillzlab.io@gmail.com | Phone: +880 1877538505 | WhatsApp: +880 1877538505 | Location: Chattagram, Bangladesh" />
-      </Helmet>
+              <title>SkillzLab - Bangladesh's First Mobile-Based Skill Development Platform</title>
+              <meta
+                name="description"
+                content="SkillzLab is Bangladesh's first mobile-based professional skill development platform. Learn Canva design, video editing, web development, freelancing, and more — all from your smartphone."
+              />
+              <meta
+                name="keywords"
+                content="SkillzLab, Skillz Lab, skill development Bangladesh, mobile learning Bangladesh, Canva course BD, video editing course BD, freelancing course, online course platform Bangladesh, mobile-based education"
+              />
+              <meta property="og:title" content="SkillzLab - Learn Skills from Your Smartphone" />
+              <meta property="og:description" content="Join SkillzLab — the first mobile-based skill development platform in Bangladesh. Learn Canva, editing, and freelancing on your phone!" />
+              <meta property="og:url" content="https://skillzlab.online" />
+              <meta property="og:type" content="website" />
+            </Helmet>
 
       <div className="min-h-screen pt-24 bg-white">
             <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
