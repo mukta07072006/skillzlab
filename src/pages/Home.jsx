@@ -151,19 +151,7 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [testimonials.length]);
 
-  const handleVideoPlay = () => {
-    toast({
-      title: "🚀 Exciting Feature Coming Soon!",
-      description: "We're working hard to bring you this video feature. Stay tuned!",
-      action: (
-        <Link to="/courses">
-          <Button variant="outline" size="sm" className="border-primary text-primary">
-            Explore Courses
-          </Button>
-        </Link>
-      ),
-    });
-  };
+  
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -273,17 +261,7 @@ const Home = () => {
                   onHoverEnd={endHoverAnimation}
                   className="aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-primary/20 relative"
                 >
-                  <div className={`absolute inset-0 flex items-center justify-center z-10 ${isVideoHovered ? 'opacity-0' : 'opacity-100'} transition-opacity`}>
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <Button 
-                        onClick={handleVideoPlay}
-                        size="lg" 
-                        className="rounded-full w-16 h-16 bg-primary/90 hover:bg-primary backdrop-blur-sm"
-                      >
-                        <Play className="w-8 h-8 fill-current" />
-                      </Button>
-                    </div>
-                  </div>
+                  
                   <video
                     className="w-full h-full object-cover"
                     autoPlay
