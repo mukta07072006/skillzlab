@@ -59,7 +59,7 @@ export default function EnrollForm() {
 
     const { error } = await supabase.from('pending_enrollments').insert([
       {
-        user_id: user.id,
+        user_id: user?.id,
         course_id: courseId,
         name: formData.name,
         phone: formData.phone,
