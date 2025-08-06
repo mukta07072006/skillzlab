@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ContactFormPage() { return ( <div className="min-h-screen flex items-center justify-center bg-blue-50 p-6"> <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-yellow-400"> <h1 className="text-2xl font-bold text-blue-700 mb-6 text-center">Contact Form</h1> <form action="https://formspree.io/f/xgvzylzd" method="POST" className="space-y-4"> <div> <label className="block text-blue-800 mb-1">Name</label> <input
+export default function ContactFormPage() { return ( <div className="min-h-screen flex items-center justify-center bg-blue-50 p-6"> <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-yellow-400"> <h1 className="text-2xl font-bold text-blue-700 mb-6 text-center">Free Workshop Registration</h1> <form action="https://formspree.io/f/xgvzylzd" method="POST" className="space-y-4"> <div> <label className="block text-blue-800 mb-1">Name</label> <input
 type="text"
 name="name"
 required
