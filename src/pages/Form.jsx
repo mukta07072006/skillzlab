@@ -1,19 +1,6 @@
 import React, { useState } from "react";
 
 export default function ContactFormPage() {
-  const [selectedCourses, setSelectedCourses] = useState({
-    creativeDesign: false,
-    webDevelopment: false,
-    videoEditing: false
-  });
-
-  const handleCourseChange = (course) => {
-    setSelectedCourses(prev => ({
-      ...prev,
-      [course]: !prev[course]
-    }));
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 p-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-yellow-400">
@@ -65,156 +52,39 @@ export default function ContactFormPage() {
             />
           </div>
 
-          {/* Course Selection Dropdowns */}
-          <div className="space-y-4">
+          {/* Course Selection Checkboxes */}
+          <div className="space-y-2">
             <h2 className="text-lg font-semibold text-blue-800 mb-2">Select Courses of Interest:</h2>
             
-            {/* Creative Design Dropdown */}
-            <div className="border border-blue-200 rounded-lg overflow-hidden">
-              <button
-                type="button"
-                onClick={() => handleCourseChange('creativeDesign')}
-                className={`w-full flex justify-between items-center p-3 ${selectedCourses.creativeDesign ? 'bg-blue-50' : ''}`}
-              >
-                <span className="font-medium text-blue-800">Creative Design</span>
-                <svg
-                  className={`w-5 h-5 transition-transform ${selectedCourses.creativeDesign ? 'transform rotate-180' : ''}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {selectedCourses.creativeDesign && (
-                <div className="p-3 bg-blue-50 border-t border-blue-100">
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="Canva Design"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>Creative Design</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="Photo Editing"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>Manipulation</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="Logo Design"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>Logo Design</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Web Development Dropdown */}
-            <div className="border border-blue-200 rounded-lg overflow-hidden">
-              <button
-                type="button"
-                onClick={() => handleCourseChange('webDevelopment')}
-                className={`w-full flex justify-between items-center p-3 ${selectedCourses.webDevelopment ? 'bg-blue-50' : ''}`}
-              >
-                <span className="font-medium text-blue-800">Web Development</span>
-                <svg
-                  className={`w-5 h-5 transition-transform ${selectedCourses.webDevelopment ? 'transform rotate-180' : ''}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {selectedCourses.webDevelopment && (
-                <div className="p-3 bg-blue-50 border-t border-blue-100">
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="HTML/CSS"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>HTML/CSS</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="JavaScript"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>JavaScript</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="React"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>React</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Video Editing Dropdown */}
-            <div className="border border-blue-200 rounded-lg overflow-hidden">
-              <button
-                type="button"
-                onClick={() => handleCourseChange('videoEditing')}
-                className={`w-full flex justify-between items-center p-3 ${selectedCourses.videoEditing ? 'bg-blue-50' : ''}`}
-              >
-                <span className="font-medium text-blue-800">Video Editing</span>
-                <svg
-                  className={`w-5 h-5 transition-transform ${selectedCourses.videoEditing ? 'transform rotate-180' : ''}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {selectedCourses.videoEditing && (
-                <div className="p-3 bg-blue-50 border-t border-blue-100">
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="CapCut Editing"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>CapCut</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name="courses[]"
-                        value="Premiere Pro"
-                        className="rounded text-yellow-500"
-                      />
-                      <span>Alight Motion</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="courses[]"
+                value="Creative Design"
+                className="rounded text-yellow-500"
+              />
+              <span>Creative Design</span>
+            </label>
+            
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="courses[]"
+                value="Web Development"
+                className="rounded text-yellow-500"
+              />
+              <span>Web Development</span>
+            </label>
+            
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="courses[]"
+                value="Video Editing"
+                className="rounded text-yellow-500"
+              />
+              <span>Video Editing</span>
+            </label>
           </div>
 
           <button
