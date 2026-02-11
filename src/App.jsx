@@ -22,12 +22,12 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        <Header />
+        {/* <Header /> */}
         <main className="flex-1">
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
+            {/* <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:courseId" element={<CourseDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/success-stories" element={<SuccessStories />} />
@@ -37,7 +37,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/enroll/:courseId" element={<EnrollForm />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/form" element={<Form />} />
+            <Route path="/form" element={<Form />} /> */}
             
 
             {/* Protected Routes (require authentication) */}
@@ -54,7 +54,7 @@ function App() {
             {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} */}
           </Routes>
         </main>
-        <Footer />
+        {/* <Footer /> */}
         <WhatsAppFloat />
         <Toaster />
       </div>
